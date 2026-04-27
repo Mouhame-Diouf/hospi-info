@@ -1,0 +1,19 @@
+npx create-react-app hospi-info-frontend : ceci peremet de creee le frontend
+
+python manage.py runserver
+
+http://localhost:3000/stats
+
+http://127.0.0.1:8000/admin django
+
+http://localhost:3000 react
+
+http://127.0.0.1:8000/admin/hospitals/hospital/ ajoue des hopitaux
+
+ https://africastalking.com    pour mon compte et sms vrai
+
+http://localhost:3000/inscription-hopital (hopital qui veul rejoindre page de donner)
+
+http://localhost:3000/super-admin "page administrateur pour confirmer les ajouts" (superadmin2026)
+
+http://localhost:3000/inscription-hopital (hopital reel a mettre c'est ici)

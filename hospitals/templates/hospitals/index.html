@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>HOSPI-INFO - Hôpitaux</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f0f8ff; padding: 20px; }
+        h1 { text-align: center; }
+        .hospital { border: 1px solid #ccc; padding: 15px; margin-bottom: 15px; border-radius: 10px; background: #fff; }
+        .hospital h2 { margin: 0; color: #1e90ff; }
+        .services { margin-left: 20px; }
+        .available { color: green; font-weight: bold; }
+        .not-available { color: red; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Hôpitaux disponibles</h1>
+
+    {% for hospital in hospitals %}
+    <div class="hospital">
+        <h2>{{ hospital.name }} ({{ hospital.city }})</h2>
+        <p>Lits disponibles : {{ hospital.available_beds }} / {{ hospital.total_beds }}</p>
+        <p>Services :</p>
+        <ul class="services">
+            {% for service in hospital.service_set.all %}
+            <li class="{% if service.available %}available{% else %}not-available{% endif %}">
+                {{ service.name }} - {% if service.available %}Disponible{% else %}Indisponible{% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% empty %}
+    <p>Aucun hôpital n’est enregistré pour le moment.</p>
+    {% endfor %}
+
+</body>
+</html>
