@@ -8,14 +8,7 @@ function DashboardHopital() {
   const [litsDisponibles, setLitsDisponibles] = useState('');
   const [telephone, setTelephone] = useState('');
   const [adresse, setAdresse] = useState('');
-  const [services, setServices] = useState([]);
   const navigate = useNavigate();
-
-  const servicesDisponibles = [
-    'Urgences', 'Maternité', 'Pédiatrie', 'Chirurgie',
-    'Cardiologie', 'Neurologie', 'Psychiatrie', 'Radiologie',
-    'Réanimation', 'Dermatologie'
-  ];
 
   useEffect(() => {
     const hopitalData = localStorage.getItem('hopital_connecte');
@@ -30,7 +23,6 @@ function DashboardHopital() {
         setLitsDisponibles(res.data.available_beds);
         setTelephone(res.data.phone);
         setAdresse(res.data.address);
-        setServices(res.data.services.filter(s => s.available).map(s => s.name));
       })
       .catch(err => console.error(err));
   }, [navigate]);
