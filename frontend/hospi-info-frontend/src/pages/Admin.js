@@ -8,13 +8,13 @@ function Admin() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get('http://localhost:8000/api/hospitals/')
+    axios.get('c/api/hospitals/')
       .then(res => setHospitals(res.data))
       .catch(err => console.error(err));
   }, []);
 
   const updateBeds = (id, value) => {
-    axios.patch(`http://localhost:8000/api/hospitals/${id}/beds/`,
+    axios.patch(`https://MouhaemedDiouf221.pythonanywhere.com/api/hospitals/${id}/beds/`,
       { available_beds: parseInt(value) },
       { auth: { username: 'admin', password: 'admin' } }
     )
