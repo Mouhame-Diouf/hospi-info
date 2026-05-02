@@ -17,7 +17,7 @@ function DashboardHopital() {
       return;
     }
     const h = JSON.parse(hopitalData);
-    axios.get(`http://localhost:8000/api/hospitals/${h.id}/`)
+    axios.get(`https://MouhaemedDiouf221.pythonanywhere.com/api/hospitals/${h.id}/`)
       .then(res => {
         setHopital(res.data);
         setLitsDisponibles(res.data.available_beds);
@@ -30,7 +30,7 @@ function DashboardHopital() {
   const mettreAJourLits = async () => {
     try {
       await axios.patch(
-        `http://localhost:8000/api/hospitals/${hopital.id}/beds/`,
+        `https://MouhaemedDiouf221.pythonanywhere.com/api/hospitals/${hopital.id}/beds/`,
         { available_beds: parseInt(litsDisponibles) },
         { auth: { username: 'admin', password: 'admin' } }
       );

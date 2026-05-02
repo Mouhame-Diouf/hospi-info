@@ -7,7 +7,7 @@ function Stats() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get('http://localhost:8000/api/stats/')
+    axios.get('https://MouhaemedDiouf221.pythonanywhere.com/api/stats/')
       .then(res => setStats(res.data))
       .catch(err => console.error(err));
   }, []);

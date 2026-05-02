@@ -21,7 +21,7 @@ function ForgotPassword() {
     setLoading(true);
     setError('');
     try {
-      await axios.post('http://localhost:8000/api/envoyer-code/', { telephone });
+      await axios.post('https://MouhaemedDiouf221.pythonanywhere.com/api/envoyer-code/', { telephone });
       setSuccess(`✅ Code envoyé au +221 ${telephone}`);
       setTimeout(() => { setSuccess(''); setStep(2); }, 1500);
     } catch (err) {
@@ -38,7 +38,7 @@ function ForgotPassword() {
     setLoading(true);
     setError('');
     try {
-      await axios.post('http://localhost:8000/api/verifier-code/', { telephone, code });
+      await axios.post('https://MouhaemedDiouf221.pythonanywhere.com/api/verifier-code/', { telephone, code });
       setStep(3);
     } catch (err) {
       setError('Code incorrect. Vérifiez le SMS reçu.');

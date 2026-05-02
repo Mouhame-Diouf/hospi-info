@@ -52,7 +52,7 @@ function InscriptionHopital() {
     }
     setError('');
     try {
-      await axios.post('http://localhost:8000/api/demandes/soumettre/', {
+      await axios.post('https://MouhaemedDiouf221.pythonanywhere.com/api/demandes/soumettre/', {
         nom: form.nom, ville: form.ville, adresse: form.adresse,
         telephone: form.telephone, email: form.email,
         totalLits: form.totalLits, services: form.services,

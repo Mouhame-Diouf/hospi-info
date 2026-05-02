@@ -9,7 +9,7 @@ function Home() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get('http://localhost:8000/api/hospitals/')
+    axios.get('https://MouhaemedDiouf221.pythonanywhere.com/api/hospitals/')
       .then(res => setHospitals(res.data))
       .catch(err => console.error(err));
   }, []);

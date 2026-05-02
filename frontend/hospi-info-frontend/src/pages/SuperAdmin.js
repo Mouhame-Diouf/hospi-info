@@ -21,7 +21,7 @@ function SuperAdmin() {
 
   useEffect(() => {
     if (authentifie) {
-      axios.get('http://localhost:8000/api/demandes/')
+      axios.get('https://MouhaemedDiouf221.pythonanywhere.com/api/demandes/')
         .then(res => setListe(res.data))
         .catch(err => console.error(err));
     }
@@ -29,7 +29,7 @@ function SuperAdmin() {
 
   const approuver = async (id) => {
     try {
-      const res = await axios.patch(`http://localhost:8000/api/demandes/${id}/`, { statut: 'approuve' });
+      const res = await axios.patch(`https://MouhaemedDiouf221.pythonanywhere.com/api/demandes/${id}/`, { statut: 'approuve' });
       setMessage('✅ ' + res.data.message);
       setListe(liste.map(d => d.id === id ? { ...d, statut: 'approuve' } : d));
     } catch (err) {
@@ -39,7 +39,7 @@ function SuperAdmin() {
 
   const rejeter = async (id) => {
     try {
-      const res = await axios.patch(`http://localhost:8000/api/demandes/${id}/`, { statut: 'rejete' });
+      const res = await axios.patch(`https://MouhaemedDiouf221.pythonanywhere.com/api/demandes/${id}/`, { statut: 'rejete' });
       setMessage('❌ ' + res.data.message);
       setListe(liste.map(d => d.id === id ? { ...d, statut: 'rejete' } : d));
     } catch (err) {

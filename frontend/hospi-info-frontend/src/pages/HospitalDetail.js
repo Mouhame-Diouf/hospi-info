@@ -8,7 +8,7 @@ function HospitalDetail() {
   const [hospital, setHospital] = useState(null);
 
   useEffect(() => {
-    axios.get(`http://localhost:8000/api/hospitals/${id}/`)
+    axios.get(`https://MouhaemedDiouf221.pythonanywhere.com/api/hospitals/${id}/`)
       .then(res => setHospital(res.data))
       .catch(err => console.error(err));
   }, [id]);
