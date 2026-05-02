@@ -17,3 +17,5 @@ http://localhost:3000/inscription-hopital (hopital qui veul rejoindre page de do
 http://localhost:3000/super-admin "page administrateur pour confirmer les ajouts" (superadmin2026)
 
 http://localhost:3000/inscription-hopital (hopital reel a mettre c'est ici)
+
+https://www.pythonanywhere.com/user/MouhaemedDiouf221/

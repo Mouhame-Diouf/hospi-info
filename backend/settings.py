@@ -37,7 +37,9 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:3001',
     'http://127.0.0.1:3000',
     'http://127.0.0.1:3001',
-    'https://hospi-info-app.vercel.app',
+    'https://hospi-info.vercel.app',
+    'https://hospi-info-gilt.vercel.app',
+    'https://hospi-info-senegal.vercel.app',
 ]
 
 ROOT_URLCONF = 'backend.urls'
