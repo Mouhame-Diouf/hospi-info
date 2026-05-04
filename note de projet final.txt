@@ -19,3 +19,5 @@ http://localhost:3000/super-admin "page administrateur pour confirmer les ajouts
 http://localhost:3000/inscription-hopital (hopital reel a mettre c'est ici)
 
 https://www.pythonanywhere.com/user/MouhaemedDiouf221/
+
+https://hospi-info.vercel.app/
