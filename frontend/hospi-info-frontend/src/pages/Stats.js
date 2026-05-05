@@ -7,9 +7,16 @@ function Stats() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get('https://MouhaemedDiouf221.pythonanywhere.com/api/stats/')
-      .then(res => setStats(res.data))
-      .catch(err => console.error(err));
+    const chargerStats = () => {
+      axios.get('https://MouhaemedDiouf221.pythonanywhere.com/api/stats/')
+        .then(res => setStats(res.data))
+        .catch(err => console.error(err));
+    };
+
+    chargerStats();
+    const interval = setInterval(chargerStats, 30000);
+
+    return () => clearInterval(interval);
   }, []);
 
   return (

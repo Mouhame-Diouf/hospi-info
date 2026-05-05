@@ -8,9 +8,16 @@ function Admin() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get('https://MouhaemedDiouf221.pythonanywhere.com/api/hospitals/')
-      .then(res => setHospitals(res.data))
-      .catch(err => console.error(err));
+    const chargerHopitaux = () => {
+      axios.get('https://MouhaemedDiouf221.pythonanywhere.com/api/hospitals/')
+        .then(res => setHospitals(res.data))
+        .catch(err => console.error(err));
+    };
+
+    chargerHopitaux();
+    const interval = setInterval(chargerHopitaux, 30000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const updateBeds = (id, value) => {

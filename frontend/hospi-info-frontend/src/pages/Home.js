@@ -6,13 +6,54 @@ import MapView from '../components/MapView';
 function Home() {
   const [hospitals, setHospitals] = useState([]);
   const [search, setSearch] = useState('');
+  const [hopitalPlusProche, setHopitalPlusProche] = useState(null);
   const navigate = useNavigate();
 
+  // Charger les hôpitaux toutes les 30 secondes
   useEffect(() => {
-    axios.get('https://MouhaemedDiouf221.pythonanywhere.com/api/hospitals/')
-      .then(res => setHospitals(res.data))
-      .catch(err => console.error(err));
+    const chargerHopitaux = () => {
+      axios.get('https://MouhaemedDiouf221.pythonanywhere.com/api/hospitals/')
+        .then(res => setHospitals(res.data))
+        .catch(err => console.error(err));
+    };
+
+    chargerHopitaux();
+    const interval = setInterval(chargerHopitaux, 30000);
+    return () => clearInterval(interval);
   }, []);
+
+  // Trouver l'hôpital le plus proche
+  useEffect(() => {
+    if (navigator.geolocation && hospitals.length > 0) {
+      navigator.geolocation.getCurrentPosition(pos => {
+        const userLat = pos.coords.latitude;
+        const userLng = pos.coords.longitude;
+
+        const distance = (lat1, lng1, lat2, lng2) => {
+          const R = 6371;
+          const dLat = (lat2 - lat1) * Math.PI / 180;
+          const dLng = (lng2 - lng1) * Math.PI / 180;
+          const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLng/2) * Math.sin(dLng/2);
+          return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        };
+
+        const hopitauxDisponibles = hospitals.filter(h =>
+          h.available_beds > 0 && h.latitude && h.longitude
+        );
+
+        if (hopitauxDisponibles.length > 0) {
+          const plusProche = hopitauxDisponibles.reduce((prev, curr) => {
+            const distPrev = distance(userLat, userLng, prev.latitude, prev.longitude);
+            const distCurr = distance(userLat, userLng, curr.latitude, curr.longitude);
+            return distCurr < distPrev ? curr : prev;
+          });
+          setHopitalPlusProche(plusProche);
+        }
+      });
+    }
+  }, [hospitals]);
 
   const filtered = hospitals.filter(h =>
     h.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -29,14 +70,12 @@ function Home() {
       fontFamily: 'Segoe UI, sans-serif',
       position: 'relative'
     }}>
-      {/* OVERLAY SUR TOUTE LA PAGE */}
       <div style={{
         position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
         background: 'linear-gradient(135deg, rgba(0,40,100,0.75) 0%, rgba(0,100,160,0.65) 100%)',
         zIndex: 0
       }}></div>
 
-      {/* CONTENU */}
       <div style={{ position: 'relative', zIndex: 1 }}>
 
         {/* HEADER */}
@@ -74,6 +113,7 @@ function Home() {
             </div>
           </div>
 
+          {/* BOUTONS */}
           <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', flexWrap: 'wrap' }}>
             <button onClick={() => navigate('/stats')}
               style={{ background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(10px)',
@@ -89,8 +129,40 @@ function Home() {
                 fontSize: '15px', fontWeight: '500' }}>
               ⚙️ Admin
             </button>
+            <button onClick={() => navigate('/chat')}
+              style={{ background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(10px)',
+                border: '1px solid rgba(255,255,255,0.6)', color: 'white',
+                padding: '10px 24px', borderRadius: '50px', cursor: 'pointer',
+                fontSize: '15px', fontWeight: '500' }}>
+              🤖 Assistant
+            </button>
           </div>
         </div>
+
+        {/* HOPITAL LE PLUS PROCHE */}
+        {hopitalPlusProche && (
+          <div style={{ maxWidth: '750px', margin: '0 auto 20px', padding: '0 20px' }}>
+            <div style={{ background: 'rgba(46,204,113,0.2)', border: '2px solid #2ecc71',
+              borderRadius: '16px', padding: '20px', color: 'white' }}>
+              <h3 style={{ marginBottom: '8px', fontSize: '1rem' }}>
+                📍 Hôpital le plus proche de vous
+              </h3>
+              <h2 style={{ fontSize: '1.3rem', fontWeight: '700', marginBottom: '8px' }}>
+                🏥 {hopitalPlusProche.name}
+              </h2>
+              <p style={{ opacity: 0.9, marginBottom: '12px' }}>
+                📍 {hopitalPlusProche.city} — 🛏️ {hopitalPlusProche.available_beds} lits disponibles
+              </p>
+              <button
+                onClick={() => navigate(`/hospital/${hopitalPlusProche.id}`)}
+                style={{ background: '#2ecc71', color: 'white', border: 'none',
+                  padding: '10px 24px', borderRadius: '50px', cursor: 'pointer',
+                  fontWeight: '600', fontSize: '14px' }}>
+                Voir les détails →
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* CARTE */}
         <MapView hospitals={hospitals} />

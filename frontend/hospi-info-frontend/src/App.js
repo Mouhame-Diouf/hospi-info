@@ -12,6 +12,7 @@ import InscriptionHopital from './pages/InscriptionHopital';
 import SuperAdmin from './pages/SuperAdmin';
 import LoginHopital from './pages/LoginHopital';
 import DashboardHopital from './pages/DashboardHopital';
+import Chat from './pages/Chat';
 
 function PrivateRoute({ children }) {
   const user = localStorage.getItem('hospi_user');
@@ -30,6 +31,7 @@ function App() {
         <Route path="/super-admin" element={<SuperAdmin />} />
         <Route path="/login-hopital" element={<LoginHopital />} />
         <Route path="/dashboard-hopital" element={<DashboardHopital />} />
+        <Route path="/chat" element={<Chat />} />
         <Route path="/home" element={<PrivateRoute><Home /></PrivateRoute>} />
         <Route path="/hospital/:id" element={<PrivateRoute><HospitalDetail /></PrivateRoute>} />
         <Route path="/admin" element={<PrivateRoute><Admin /></PrivateRoute>} />
