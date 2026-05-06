@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 
-const API = 'http://localhost:8000';
+const API = 'https://MouhaemedDiouf221.pythonanywhere.com';
 
 function RendezVous() {
   const { hospitalId } = useParams();
