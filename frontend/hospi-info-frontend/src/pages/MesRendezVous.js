@@ -19,7 +19,7 @@ function MesRendezVous() {
       setTelephone(tel);
       chercher(tel);
     }
-  }, []);
+  }, [location.search]);
 
   const chercher = async (tel) => {
     if (!tel) return;
