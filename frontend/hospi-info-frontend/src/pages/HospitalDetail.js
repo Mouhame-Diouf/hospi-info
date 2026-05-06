@@ -13,109 +13,235 @@ function HospitalDetail() {
       .catch(err => console.error(err));
   }, [id]);
 
-  return (
-    <div style={{ minHeight: '100vh', background: '#f8faff', fontFamily: 'Segoe UI, sans-serif' }}>
+  if (!hospital) return (
+    <div style={{ textAlign: 'center', padding: '50px', fontFamily: 'Segoe UI' }}>
+      Chargement...
+    </div>
+  );
 
-      {/* HEADER AVEC PHOTO */}
-      <div style={{
-        backgroundImage: 'url(/hospi-info.jpg)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        color: 'white', padding: '60px 30px',
-        textAlign: 'center', position: 'relative'
-      }}>
-        <div style={{
-          position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
-          background: 'linear-gradient(135deg, rgba(0,40,100,0.55) 0%, rgba(0,100,160,0.45) 100%)'
-        }}></div>
-        <div style={{ position: 'relative', zIndex: 1 }}>
-          <button onClick={() => navigate('/home')}
-            style={{ position: 'absolute', left: 0, top: 0,
-              background: 'rgba(255,255,255,0.2)', border: '1px solid rgba(255,255,255,0.5)',
-              color: 'white', padding: '8px 20px', borderRadius: '50px', cursor: 'pointer' }}>
-            ⬅ Retour
-          </button>
-          {hospital && (
-            <>
-              <div style={{ fontSize: '3rem', marginBottom: '10px' }}>🏥</div>
-              <h1 style={{ fontSize: '2.2rem', fontWeight: '700', marginBottom: '8px' }}>
-                {hospital.name}
-              </h1>
-              <p style={{ opacity: 0.9 }}>📍 {hospital.city} — {hospital.address}</p>
-            </>
-          )}
+  return (
+    <div style={{ minHeight: '100vh', background: '#f5f5f5', fontFamily: 'Segoe UI, sans-serif' }}>
+
+      {/* HEADER */}
+      <div style={{ background: '#1a1a2e', padding: '16px 20px',
+        display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <button onClick={() => navigate('/home')}
+          style={{ background: 'rgba(255,255,255,0.1)', border: 'none',
+            color: 'white', padding: '8px 16px', borderRadius: '50px', cursor: 'pointer' }}>
+          ⬅
+        </button>
+        <div style={{ fontSize: '2rem' }}>🏥</div>
+        <div>
+          <div style={{ color: 'white', fontWeight: '700', fontSize: '1.1rem' }}>
+            {hospital.name}
+          </div>
+          <div style={{ color: '#9ca3af', fontSize: '12px' }}>📍 {hospital.city}</div>
         </div>
       </div>
 
-      {/* CONTENU */}
-      {!hospital ? (
-        <p style={{ textAlign: 'center', padding: '50px' }}>Chargement...</p>
-      ) : (
-        <div style={{ maxWidth: '750px', margin: '30px auto', padding: '0 20px' }}>
+      <div style={{ padding: '16px 20px' }}>
 
-          {/* INFOS */}
-          <div style={{ background: 'white', borderRadius: '16px', padding: '24px',
-            marginBottom: '16px', boxShadow: '0 4px 15px rgba(0,0,0,0.07)' }}>
-            <h2 style={{ color: '#1a3a6b', marginBottom: '16px' }}>Informations</h2>
-            <p style={{ marginBottom: '8px', color: '#555' }}>📞 {hospital.phone || 'Non renseigné'}</p>
-            <p style={{ marginBottom: '16px', color: '#555' }}>🏠 {hospital.address || 'Non renseignée'}</p>
-            <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-              <div style={{ background: '#f0f7ff', borderRadius: '10px', padding: '12px 20px', textAlign: 'center' }}>
-                <div style={{ fontSize: '1.5rem', fontWeight: '700', color: '#1d72b8' }}>
-                  {hospital.available_beds}
+        {/* STATUS */}
+        <div style={{
+          background: hospital.available_beds > 0 ? '#dcfce7' : '#fee2e2',
+          border: `2px solid ${hospital.available_beds > 0 ? '#16a34a' : '#dc2626'}`,
+          borderRadius: '16px', padding: '16px', marginBottom: '16px',
+          display: 'flex', alignItems: 'center', gap: '12px'
+        }}>
+          <div style={{ fontSize: '2rem' }}>
+            {hospital.available_beds > 0 ? '✅' : '❌'}
+          </div>
+          <div>
+            <div style={{ fontWeight: '700',
+              color: hospital.available_beds > 0 ? '#16a34a' : '#dc2626', fontSize: '1rem' }}>
+              {hospital.available_beds > 0 ? 'Hôpital disponible' : 'Hôpital complet'}
+            </div>
+            <div style={{ color: '#6b7280', fontSize: '13px' }}>
+              {hospital.available_beds} lits libres sur {hospital.total_beds} au total
+            </div>
+          </div>
+        </div>
+
+        {/* STATS */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr',
+          gap: '12px', marginBottom: '16px' }}>
+          <div style={{ background: 'white', borderRadius: '12px', padding: '16px',
+            textAlign: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+            borderTop: '3px solid #2563eb' }}>
+            <div style={{ fontSize: '1.5rem', fontWeight: '800', color: '#2563eb' }}>
+              {hospital.available_beds}
+            </div>
+            <div style={{ fontSize: '11px', color: '#6b7280', marginTop: '4px' }}>Lits libres</div>
+          </div>
+          <div style={{ background: 'white', borderRadius: '12px', padding: '16px',
+            textAlign: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+            borderTop: '3px solid #6b7280' }}>
+            <div style={{ fontSize: '1.5rem', fontWeight: '800', color: '#374151' }}>
+              {hospital.total_beds}
+            </div>
+            <div style={{ fontSize: '11px', color: '#6b7280', marginTop: '4px' }}>Lits totaux</div>
+          </div>
+          <div style={{ background: 'white', borderRadius: '12px', padding: '16px',
+            textAlign: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+            borderTop: `3px solid ${hospital.occupancy_rate > 80 ? '#dc2626' : '#16a34a'}` }}>
+            <div style={{ fontSize: '1.5rem', fontWeight: '800',
+              color: hospital.occupancy_rate > 80 ? '#dc2626' : '#16a34a' }}>
+              {hospital.occupancy_rate}%
+            </div>
+            <div style={{ fontSize: '11px', color: '#6b7280', marginTop: '4px' }}>Occupation</div>
+          </div>
+        </div>
+
+        {/* BARRE OCCUPATION */}
+        <div style={{ background: 'white', borderRadius: '16px', padding: '16px',
+          marginBottom: '16px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+            <span style={{ fontWeight: '700', color: '#1a1a2e', fontSize: '14px' }}>
+              Taux d'occupation
+            </span>
+            <span style={{ fontSize: '14px', fontWeight: '700',
+              color: hospital.occupancy_rate > 80 ? '#dc2626' : '#16a34a' }}>
+              {hospital.occupancy_rate}%
+            </span>
+          </div>
+          <div style={{ background: '#f3f4f6', borderRadius: '50px', height: '10px' }}>
+            <div style={{
+              background: hospital.occupancy_rate > 80 ? '#dc2626' :
+                hospital.occupancy_rate > 60 ? '#f59e0b' : '#16a34a',
+              borderRadius: '50px', height: '10px',
+              width: `${hospital.occupancy_rate}%`,
+              transition: 'width 0.5s'
+            }}></div>
+          </div>
+        </div>
+
+        {/* INFORMATIONS */}
+        <div style={{ background: 'white', borderRadius: '16px', padding: '16px',
+          marginBottom: '16px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
+          <h3 style={{ color: '#1a1a2e', marginBottom: '16px', fontSize: '1rem' }}>
+            📋 Informations
+          </h3>
+          {hospital.address && (
+            <div style={{ display: 'flex', gap: '12px', marginBottom: '12px',
+              alignItems: 'center' }}>
+              <span style={{ fontSize: '1.2rem' }}>📍</span>
+              <div>
+                <div style={{ fontSize: '12px', color: '#9ca3af' }}>Adresse</div>
+                <div style={{ fontSize: '14px', color: '#374151', fontWeight: '600' }}>
+                  {hospital.address}
                 </div>
-                <div style={{ fontSize: '12px', color: '#888' }}>Lits disponibles</div>
               </div>
-              <div style={{ background: '#f0f7ff', borderRadius: '10px', padding: '12px 20px', textAlign: 'center' }}>
-                <div style={{ fontSize: '1.5rem', fontWeight: '700', color: '#1d72b8' }}>
-                  {hospital.total_beds}
+            </div>
+          )}
+          {hospital.phone && (
+            <div style={{ display: 'flex', gap: '12px', marginBottom: '12px',
+              alignItems: 'center' }}>
+              <span style={{ fontSize: '1.2rem' }}>📞</span>
+              <div>
+                <div style={{ fontSize: '12px', color: '#9ca3af' }}>Téléphone</div>
+                <div style={{ fontSize: '14px', color: '#374151', fontWeight: '600' }}>
+                  {hospital.phone}
                 </div>
-                <div style={{ fontSize: '12px', color: '#888' }}>Lits totaux</div>
               </div>
-              <div style={{ background: '#fff0f0', borderRadius: '10px', padding: '12px 20px', textAlign: 'center' }}>
-                <div style={{ fontSize: '1.5rem', fontWeight: '700', color: '#e74c3c' }}>
-                  {hospital.occupancy_rate}%
-                </div>
-                <div style={{ fontSize: '12px', color: '#888' }}>Occupation</div>
+            </div>
+          )}
+          <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+            <span style={{ fontSize: '1.2rem' }}>🏙️</span>
+            <div>
+              <div style={{ fontSize: '12px', color: '#9ca3af' }}>Ville</div>
+              <div style={{ fontSize: '14px', color: '#374151', fontWeight: '600' }}>
+                {hospital.city}
               </div>
             </div>
           </div>
+        </div>
 
-          {/* SERVICES */}
-          <div style={{ background: 'white', borderRadius: '16px', padding: '24px',
-            boxShadow: '0 4px 15px rgba(0,0,0,0.07)' }}>
-            <h2 style={{ color: '#1a3a6b', marginBottom: '16px' }}>Services médicaux</h2>
-            {hospital.services.length === 0 && (
-              <p style={{ color: '#999' }}>Aucun service enregistré.</p>
-            )}
-            {hospital.services.map(s => (
-              <div key={s.id} style={{
-                padding: '12px 16px', marginBottom: '8px', borderRadius: '10px',
-                background: s.available ? '#eafaf1' : '#fdecea',
-                color: s.available ? '#2ecc71' : '#e74c3c',
-                fontWeight: '500', fontSize: '15px'
+        {/* SERVICES CLIQUABLES */}
+        <div style={{ background: 'white', borderRadius: '16px', padding: '16px',
+          marginBottom: '16px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
+          <h3 style={{ color: '#1a1a2e', marginBottom: '16px', fontSize: '1rem' }}>
+            ⚕️ Services médicaux
+          </h3>
+          <p style={{ color: '#6b7280', fontSize: '12px', marginBottom: '12px' }}>
+            Cliquez sur un service pour voir les horaires et médecins disponibles
+          </p>
+          {hospital.services.length === 0 && (
+            <p style={{ color: '#9ca3af' }}>Aucun service enregistré.</p>
+          )}
+          {hospital.services.map(s => (
+            <div key={s.id}
+              onClick={() => navigate(`/hospital/${hospital.id}/service/${encodeURIComponent(s.name)}`)}
+              style={{
+                padding: '14px 16px', marginBottom: '8px', borderRadius: '12px',
+                background: s.available ? '#f0fdf4' : '#fef2f2',
+                border: `1px solid ${s.available ? '#bbf7d0' : '#fecaca'}`,
+                cursor: 'pointer',
+                display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                transition: 'all 0.2s'
               }}>
-                {s.available ? '✅' : '❌'} {s.name}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <span style={{ fontSize: '1.3rem' }}>
+                  {s.name.toLowerCase().includes('urgence') ? '🚨' :
+                   s.name.toLowerCase().includes('maternité') ? '🤱' :
+                   s.name.toLowerCase().includes('pédiatrie') ? '👶' :
+                   s.name.toLowerCase().includes('chirurgie') ? '🔪' :
+                   s.name.toLowerCase().includes('cardiologie') ? '❤️' :
+                   s.name.toLowerCase().includes('neurologie') ? '🧠' :
+                   s.name.toLowerCase().includes('radiologie') ? '🩻' :
+                   s.name.toLowerCase().includes('psychiatrie') ? '🧘' :
+                   s.name.toLowerCase().includes('dermatologie') ? '🧴' : '🏥'}
+                </span>
+                <div>
+                  <div style={{ fontWeight: '700', fontSize: '14px',
+                    color: s.available ? '#16a34a' : '#dc2626' }}>
+                    {s.name}
+                  </div>
+                  <div style={{ fontSize: '11px', color: '#6b7280' }}>
+                    {s.available ? '✅ Disponible — Cliquez pour les détails' : '❌ Indisponible'}
+                  </div>
+                </div>
               </div>
-            ))}
-          </div>
+              <span style={{ fontSize: '16px', color: '#9ca3af' }}>→</span>
+            </div>
+          ))}
         </div>
-      )}
+          <button
+              onClick={() => navigate(`/rendezvous/${hospital.id}`)}
+                style={{ width: '100%', padding: '16px',
+                 background: 'linear-gradient(135deg, #2563eb, #1d4ed8)',
+                 color: 'white', border: 'none', borderRadius: '16px',
+                 cursor: 'pointer', fontWeight: '700', fontSize: '16px',
+                marginBottom: '12px' }}>
+           📅 Prendre un rendez-vous
+          </button>
+        {/* BOUTON APPELER */}
+        {hospital.phone && (
+          <button
+            onClick={() => window.open(`tel:${hospital.phone}`)}
+            style={{ width: '100%', padding: '16px', background: '#1a1a2e',
+              color: 'white', border: 'none', borderRadius: '16px',
+              cursor: 'pointer', fontWeight: '700', fontSize: '16px',
+              marginBottom: '16px' }}>
+            📞 Appeler l'hôpital
+          </button>
+        )}
 
-      {/* FOOTER */}
-      <div style={{ background: '#1a3a6b', color: 'white', marginTop: '40px',
-        padding: '30px 20px', textAlign: 'center' }}>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '60px', flexWrap: 'wrap', marginBottom: '16px' }}>
-          <div>
-            <div style={{ fontWeight: '700', fontSize: '15px' }}>Mouhamed Diouf</div>
-            <div style={{ opacity: 0.7, fontSize: '13px' }}>📞 +221 77 680 06 74</div>
-          </div>
-          <div>
-            <div style={{ fontWeight: '700', fontSize: '15px' }}>Assietou Ndong</div>
-            <div style={{ opacity: 0.7, fontSize: '13px' }}>Co-développeuse</div>
-          </div>
-        </div>
-        <div style={{ opacity: 0.5, fontSize: '12px' }}>© 2026 HOSPI-INFO</div>
+        {/* BOUTON TRAJET */}
+        {hospital.latitude && hospital.longitude && (
+          <button
+            onClick={() => {
+              navigator.geolocation.getCurrentPosition(pos => {
+                const url = `https://www.google.com/maps/dir/${pos.coords.latitude},${pos.coords.longitude}/${hospital.latitude},${hospital.longitude}`;
+                window.open(url, '_blank');
+              });
+            }}
+            style={{ width: '100%', padding: '16px', background: '#2563eb',
+              color: 'white', border: 'none', borderRadius: '16px',
+              cursor: 'pointer', fontWeight: '700', fontSize: '16px' }}>
+            🗺️ Obtenir l'itinéraire
+          </button>
+        )}
+
       </div>
     </div>
   );

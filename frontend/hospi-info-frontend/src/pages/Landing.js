@@ -53,7 +53,7 @@ function Landing() {
         {/* BOUTONS */}
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
           <button
-            onClick={() => navigate('/login')}
+            onClick={() => navigate('/home')}
             style={{
               background: '#ffffff', color: '#1d72b8',
               border: 'none', padding: '16px 48px',

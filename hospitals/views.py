@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 import random
 
-from .models import Hospital, Service, DemandeInscription
+from .models import Hospital, Service, DemandeInscription, Medecin, RendezVous
 from .serializers import (
     HospitalSerializer,
     HospitalUpdateBedsSerializer,
@@ -13,7 +13,6 @@ from .serializers import (
 )
 from .sms import envoyer_code_sms
 
-# Stockage temporaire des codes
 codes_temporaires = {}
 
 # ─────────────────────────────────────────────
@@ -71,6 +70,184 @@ def stats(request):
 
 
 # ─────────────────────────────────────────────
+#  ENDPOINTS MÉDECINS
+# ─────────────────────────────────────────────
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def medecin_list(request, hospital_pk):
+    """GET /api/hospitals/<id>/medecins/"""
+    medecins = Medecin.objects.filter(hospital_id=hospital_pk)
+    service = request.query_params.get('service')
+    if service:
+        medecins = medecins.filter(service__name__icontains=service)
+    data = [{
+        'id': m.id,
+        'nom': m.nom,
+        'specialite': m.specialite,
+        'telephone': m.telephone,
+        'disponible': m.disponible,
+        'heure_debut': str(m.heure_debut),
+        'heure_fin': str(m.heure_fin),
+        'jours_travail': m.jours_travail,
+        'service': m.service.name if m.service else None,
+    } for m in medecins]
+    return Response(data)
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def medecin_create(request, hospital_pk):
+    """POST /api/hospitals/<id>/medecins/"""
+    try:
+        hospital = Hospital.objects.get(pk=hospital_pk)
+        service = None
+        if request.data.get('service_id'):
+            service = Service.objects.get(pk=request.data.get('service_id'))
+        medecin = Medecin.objects.create(
+            hospital=hospital,
+            service=service,
+            nom=request.data.get('nom'),
+            specialite=request.data.get('specialite'),
+            telephone=request.data.get('telephone', ''),
+            disponible=request.data.get('disponible', True),
+            heure_debut=request.data.get('heure_debut', '08:00'),
+            heure_fin=request.data.get('heure_fin', '17:00'),
+            jours_travail=request.data.get('jours_travail', 'Lun-Ven'),
+        )
+        return Response({'message': 'Médecin ajouté !', 'id': medecin.id},
+                        status=status.HTTP_201_CREATED)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['PATCH'])
+@permission_classes([AllowAny])
+def medecin_update(request, pk):
+    """PATCH /api/medecins/<id>/"""
+    try:
+        medecin = Medecin.objects.get(pk=pk)
+        for field in ['nom', 'specialite', 'telephone', 'disponible',
+                      'heure_debut', 'heure_fin', 'jours_travail']:
+            if field in request.data:
+                setattr(medecin, field, request.data[field])
+        medecin.save()
+        return Response({'message': 'Médecin mis à jour !'})
+    except Medecin.DoesNotExist:
+        return Response({'error': 'Médecin introuvable.'}, status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['DELETE'])
+@permission_classes([AllowAny])
+def medecin_delete(request, pk):
+    """DELETE /api/medecins/<id>/"""
+    try:
+        medecin = Medecin.objects.get(pk=pk)
+        medecin.delete()
+        return Response({'message': 'Médecin supprimé !'})
+    except Medecin.DoesNotExist:
+        return Response({'error': 'Médecin introuvable.'}, status=status.HTTP_404_NOT_FOUND)
+
+
+# ─────────────────────────────────────────────
+#  ENDPOINTS RENDEZ-VOUS
+# ─────────────────────────────────────────────
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def creer_rendezvous(request):
+    try:
+        hospital = Hospital.objects.get(pk=request.data.get('hospital_id'))
+        medecin = None
+        service = None
+        if request.data.get('medecin_id'):
+            try:
+                medecin = Medecin.objects.get(pk=request.data.get('medecin_id'))
+            except:
+                pass
+        if request.data.get('service_id'):
+            try:
+                service = Service.objects.get(pk=request.data.get('service_id'))
+            except:
+                pass
+
+        rdv = RendezVous.objects.create(
+            hospital=hospital,
+            medecin=medecin,
+            service=service,
+            nom_patient=request.data.get('nom_patient', ''),
+            telephone=request.data.get('telephone', ''),
+            motif=request.data.get('motif', ''),
+            date=request.data.get('date'),
+            heure=request.data.get('heure', '08:00:00'),
+        )
+        return Response({
+            'message': 'Rendez-vous créé !',
+            'numero_rdv': rdv.numero_rdv,
+            'id': rdv.id
+        }, status=status.HTTP_201_CREATED)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def liste_rendezvous(request, hospital_pk):
+    """GET /api/hospitals/<id>/rendezvous/"""
+    rdvs = RendezVous.objects.filter(hospital_id=hospital_pk).order_by('-created_at')
+    data = [{
+        'id': r.id,
+        'numero_rdv': r.numero_rdv,
+        'nom_patient': r.nom_patient,
+        'telephone': r.telephone,
+        'motif': r.motif,
+        'date': str(r.date),
+        'heure': str(r.heure),
+        'statut': r.statut,
+        'medecin': r.medecin.nom if r.medecin else None,
+        'service': r.service.name if r.service else None,
+        'created_at': r.created_at,
+    } for r in rdvs]
+    return Response(data)
+
+
+@api_view(['PATCH'])
+@permission_classes([AllowAny])
+def update_rendezvous(request, pk):
+    """PATCH /api/rendezvous/<id>/"""
+    try:
+        rdv = RendezVous.objects.get(pk=pk)
+        if 'statut' in request.data:
+            rdv.statut = request.data['statut']
+        rdv.save()
+        return Response({'message': 'Rendez-vous mis à jour !'})
+    except RendezVous.DoesNotExist:
+        return Response({'error': 'Rendez-vous introuvable.'}, status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def rechercher_rendezvous(request):
+    """GET /api/rendezvous/rechercher/?telephone=221XXXXXXXX"""
+    telephone = request.query_params.get('telephone')
+    if not telephone:
+        return Response({'error': 'Téléphone requis.'}, status=status.HTTP_400_BAD_REQUEST)
+    rdvs = RendezVous.objects.filter(telephone=telephone).order_by('-created_at')
+    data = [{
+        'id': r.id,
+        'numero_rdv': r.numero_rdv,
+        'nom_patient': r.nom_patient,
+        'date': str(r.date),
+        'heure': str(r.heure),
+        'statut': r.statut,
+        'hospital': r.hospital.name,
+        'medecin': r.medecin.nom if r.medecin else None,
+        'service': r.service.name if r.service else None,
+    } for r in rdvs]
+    return Response(data)
+
+
+# ─────────────────────────────────────────────
 #  ENDPOINTS SMS
 # ─────────────────────────────────────────────
 
@@ -111,10 +288,6 @@ def verifier_code(request):
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def soumettre_demande(request):
-    """
-    POST /api/demandes/
-    Soumettre une demande d'inscription d'hôpital
-    """
     data = request.data
     try:
         demande = DemandeInscription.objects.create(
@@ -127,10 +300,8 @@ def soumettre_demande(request):
             services=data.get('services', []),
             responsable=data.get('responsable'),
         )
-        return Response({
-            'message': 'Demande soumise avec succès !',
-            'id': demande.id
-        }, status=status.HTTP_201_CREATED)
+        return Response({'message': 'Demande soumise !', 'id': demande.id},
+                        status=status.HTTP_201_CREATED)
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -138,23 +309,13 @@ def soumettre_demande(request):
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def liste_demandes(request):
-    """
-    GET /api/demandes/
-    Liste toutes les demandes d'inscription
-    """
     demandes = DemandeInscription.objects.all()
     data = [{
-        'id': d.id,
-        'nom': d.nom,
-        'ville': d.ville,
-        'adresse': d.adresse,
-        'telephone': d.telephone,
-        'email': d.email,
-        'totalLits': d.total_lits,
-        'services': d.services,
-        'responsable': d.responsable,
-        'statut': d.statut,
-        'created_at': d.created_at,
+        'id': d.id, 'nom': d.nom, 'ville': d.ville,
+        'adresse': d.adresse, 'telephone': d.telephone,
+        'email': d.email, 'totalLits': d.total_lits,
+        'services': d.services, 'responsable': d.responsable,
+        'statut': d.statut, 'created_at': d.created_at,
     } for d in demandes]
     return Response(data)
 
@@ -162,38 +323,26 @@ def liste_demandes(request):
 @api_view(['PATCH'])
 @permission_classes([AllowAny])
 def traiter_demande(request, pk):
-    """
-    PATCH /api/demandes/<id>/
-    Approuver ou rejeter une demande
-    """
     try:
         demande = DemandeInscription.objects.get(pk=pk)
     except DemandeInscription.DoesNotExist:
         return Response({'error': 'Demande introuvable.'}, status=status.HTTP_404_NOT_FOUND)
-
     nouveau_statut = request.data.get('statut')
-
     if nouveau_statut == 'approuve':
         demande.statut = 'approuve'
         demande.save()
-        # Créer automatiquement l'hôpital dans la base de données
         hospital = Hospital.objects.create(
-            name=demande.nom,
-            city=demande.ville,
-            address=demande.adresse,
-            phone=demande.telephone,
-            total_beds=demande.total_lits,
-            available_beds=demande.total_lits,
+            name=demande.nom, city=demande.ville,
+            address=demande.adresse, phone=demande.telephone,
+            total_beds=demande.total_lits, available_beds=demande.total_lits,
         )
         for service in demande.services:
             Service.objects.create(hospital=hospital, name=service, available=True)
-        return Response({'message': f'{demande.nom} approuvé et ajouté à HOSPI-INFO !'})
-
+        return Response({'message': f'{demande.nom} approuvé !'})
     elif nouveau_statut == 'rejete':
         demande.statut = 'rejete'
         demande.save()
         return Response({'message': f'{demande.nom} rejeté.'})
-
     return Response({'error': 'Statut invalide.'}, status=status.HTTP_400_BAD_REQUEST)
 
 

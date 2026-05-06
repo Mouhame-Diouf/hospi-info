@@ -1,9 +1,6 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Landing from './pages/Landing';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import ForgotPassword from './pages/ForgotPassword';
 import Home from './pages/Home';
 import HospitalDetail from './pages/HospitalDetail';
 import Admin from './pages/Admin';
@@ -13,29 +10,28 @@ import SuperAdmin from './pages/SuperAdmin';
 import LoginHopital from './pages/LoginHopital';
 import DashboardHopital from './pages/DashboardHopital';
 import Chat from './pages/Chat';
-
-function PrivateRoute({ children }) {
-  const user = localStorage.getItem('hospi_user');
-  return user ? children : <Navigate to="/login" />;
-}
+import ServiceDetail from './pages/ServiceDetail';
+import RendezVous from './pages/RendezVous';
+import MesRendezVous from './pages/MesRendezVous';
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Landing />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/hospital/:id" element={<HospitalDetail />} />
+        <Route path="/hospital/:hospitalId/service/:serviceName" element={<ServiceDetail />} />
+        <Route path="/admin" element={<Admin />} />
+        <Route path="/stats" element={<Stats />} />
         <Route path="/inscription-hopital" element={<InscriptionHopital />} />
         <Route path="/super-admin" element={<SuperAdmin />} />
         <Route path="/login-hopital" element={<LoginHopital />} />
         <Route path="/dashboard-hopital" element={<DashboardHopital />} />
         <Route path="/chat" element={<Chat />} />
-        <Route path="/home" element={<PrivateRoute><Home /></PrivateRoute>} />
-        <Route path="/hospital/:id" element={<PrivateRoute><HospitalDetail /></PrivateRoute>} />
-        <Route path="/admin" element={<PrivateRoute><Admin /></PrivateRoute>} />
-        <Route path="/stats" element={<PrivateRoute><Stats /></PrivateRoute>} />
+        <Route path="/rendezvous/:hospitalId" element={<RendezVous />} />
+        <Route path="/rendezvous" element={<RendezVous />} />
+        <Route path="/mes-rendezvous" element={<MesRendezVous />} />
       </Routes>
     </Router>
   );

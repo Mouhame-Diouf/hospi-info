@@ -29,10 +29,63 @@ class Service(models.Model):
                                    related_name='services')
     name       = models.CharField(max_length=100)
     available  = models.BooleanField(default=True)
+    horaires   = models.CharField(max_length=100, blank=True, default='8h - 17h')
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"{self.name} — {self.hospital.name}"
+
+
+class Medecin(models.Model):
+    hospital      = models.ForeignKey(Hospital, on_delete=models.CASCADE,
+                                      related_name='medecins')
+    service       = models.ForeignKey(Service, on_delete=models.CASCADE,
+                                      related_name='medecins', null=True, blank=True)
+    nom           = models.CharField(max_length=200)
+    specialite    = models.CharField(max_length=200)
+    telephone     = models.CharField(max_length=20, blank=True, default='')
+    disponible    = models.BooleanField(default=True)
+    heure_debut   = models.TimeField(default='08:00')
+    heure_fin     = models.TimeField(default='17:00')
+    jours_travail = models.CharField(max_length=200, default='Lun-Ven')
+    updated_at    = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.nom} — {self.hospital.name}"
+
+
+class RendezVous(models.Model):
+    STATUT_CHOICES = [
+        ('en_attente', 'En attente'),
+        ('confirme', 'Confirmé'),
+        ('annule', 'Annulé'),
+        ('termine', 'Terminé'),
+    ]
+
+    hospital    = models.ForeignKey(Hospital, on_delete=models.CASCADE,
+                                    related_name='rendezvous')
+    medecin     = models.ForeignKey(Medecin, on_delete=models.CASCADE,
+                                    related_name='rendezvous', null=True, blank=True)
+    service     = models.ForeignKey(Service, on_delete=models.CASCADE,
+                                    related_name='rendezvous', null=True, blank=True)
+    nom_patient = models.CharField(max_length=200)
+    telephone   = models.CharField(max_length=20)
+    motif       = models.TextField(blank=True, default='')
+    date        = models.DateField()
+    heure       = models.TimeField()
+    statut      = models.CharField(max_length=20, choices=STATUT_CHOICES,
+                                   default='en_attente')
+    numero_rdv  = models.CharField(max_length=20, unique=True, blank=True)
+    created_at  = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        if not self.numero_rdv:
+            import random
+            self.numero_rdv = f"RDV-{random.randint(100000, 999999)}"
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.numero_rdv} — {self.nom_patient}"
 
 
 class DemandeInscription(models.Model):
@@ -50,7 +103,8 @@ class DemandeInscription(models.Model):
     total_lits   = models.IntegerField(default=0)
     services     = models.JSONField(default=list)
     responsable  = models.CharField(max_length=200)
-    statut       = models.CharField(max_length=20, choices=STATUT_CHOICES, default='en_attente')
+    statut       = models.CharField(max_length=20, choices=STATUT_CHOICES,
+                                    default='en_attente')
     created_at   = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

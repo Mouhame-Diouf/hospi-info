@@ -1,26 +1,29 @@
 from django.contrib import admin
-from .models import Hospital, Service
-
-
-class ServiceInline(admin.TabularInline):
-    model  = Service
-    extra  = 1   # affiche 1 ligne vide pour ajouter un service directement
-
+from .models import Hospital, Service, Medecin, RendezVous, DemandeInscription
 
 @admin.register(Hospital)
 class HospitalAdmin(admin.ModelAdmin):
-    list_display  = ('name', 'city', 'available_beds', 'total_beds', 'occupancy_rate', 'updated_at')
-    list_filter   = ('city',)
-    search_fields = ('name', 'city')
-    inlines       = [ServiceInline]
-
-    def occupancy_rate(self, obj):
-        return f"{obj.occupancy_rate}%"
-    occupancy_rate.short_description = "Taux d'occupation"
-
+    list_display = ['name', 'city', 'available_beds', 'total_beds', 'occupancy_rate']
+    search_fields = ['name', 'city']
 
 @admin.register(Service)
 class ServiceAdmin(admin.ModelAdmin):
-    list_display  = ('name', 'hospital', 'available', 'updated_at')
-    list_filter   = ('available', 'hospital')
-    search_fields = ('name',)
+    list_display = ['name', 'hospital', 'available']
+    list_filter = ['available', 'hospital']
+
+@admin.register(Medecin)
+class MedecinAdmin(admin.ModelAdmin):
+    list_display = ['nom', 'specialite', 'hospital', 'service', 'disponible', 'heure_debut', 'heure_fin']
+    list_filter = ['disponible', 'hospital']
+    search_fields = ['nom', 'specialite']
+
+@admin.register(RendezVous)
+class RendezVousAdmin(admin.ModelAdmin):
+    list_display = ['numero_rdv', 'nom_patient', 'hospital', 'medecin', 'date', 'heure', 'statut']
+    list_filter = ['statut', 'hospital']
+    search_fields = ['numero_rdv', 'nom_patient', 'telephone']
+
+@admin.register(DemandeInscription)
+class DemandeAdmin(admin.ModelAdmin):
+    list_display = ['nom', 'ville', 'statut', 'created_at']
+    list_filter = ['statut']
