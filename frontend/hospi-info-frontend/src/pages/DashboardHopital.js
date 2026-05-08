@@ -45,12 +45,15 @@ function DashboardHopital() {
   const mettreAJourLits = async () => {
     try {
       await axios.patch(`${API}/api/hospitals/${hopital.id}/beds/`,
-        { available_beds: parseInt(litsDisponibles) },
-        { auth: { username: 'admin', password: 'admin' } }
+        { available_beds: parseInt(litsDisponibles) }
       );
       setMessage('✅ Lits mis à jour !');
+      const res = await axios.get(`${API}/api/hospitals/${hopital.id}/`);
+      setHopital(res.data);
       setTimeout(() => setMessage(''), 3000);
-    } catch { setMessage('❌ Erreur.'); }
+    } catch {
+      setMessage('❌ Erreur mise à jour lits.');
+    }
   };
 
   const traiterRDV = async (id, statut) => {
@@ -59,7 +62,9 @@ function DashboardHopital() {
       setRdvs(rdvs.map(r => r.id === id ? { ...r, statut } : r));
       setMessage(statut === 'confirme' ? '✅ Rendez-vous confirmé !' : '❌ Rendez-vous annulé.');
       setTimeout(() => setMessage(''), 3000);
-    } catch { setMessage('❌ Erreur.'); }
+    } catch {
+      setMessage('❌ Erreur.');
+    }
   };
 
   const ajouterMedecin = async () => {
@@ -75,7 +80,9 @@ function DashboardHopital() {
         heure_debut: '08:00', heure_fin: '17:00', jours_travail: 'Lun-Ven' });
       setMessage('✅ Médecin ajouté !');
       setTimeout(() => setMessage(''), 3000);
-    } catch { setMessage('❌ Erreur.'); }
+    } catch {
+      setMessage('❌ Erreur ajout médecin.');
+    }
   };
 
   const toggleDisponibilite = async (medecin) => {
@@ -84,7 +91,9 @@ function DashboardHopital() {
         { disponible: !medecin.disponible });
       setMedecins(medecins.map(m => m.id === medecin.id ?
         { ...m, disponible: !m.disponible } : m));
-    } catch { setMessage('❌ Erreur.'); }
+    } catch {
+      setMessage('❌ Erreur.');
+    }
   };
 
   const supprimerMedecin = async (id) => {
@@ -94,7 +103,9 @@ function DashboardHopital() {
       setMedecins(medecins.filter(m => m.id !== id));
       setMessage('✅ Médecin supprimé !');
       setTimeout(() => setMessage(''), 3000);
-    } catch { setMessage('❌ Erreur.'); }
+    } catch {
+      setMessage('❌ Erreur suppression.');
+    }
   };
 
   const deconnecter = () => {
@@ -106,13 +117,13 @@ function DashboardHopital() {
 
   if (!hopital) return (
     <div style={{ textAlign: 'center', padding: '50px', fontFamily: 'Segoe UI' }}>
-      Chargement...
+      ⏳ Chargement...
     </div>
   );
 
   return (
     <div style={{ minHeight: '100vh', background: '#f0f4f8',
-      fontFamily: 'Segoe UI, sans-serif', paddingBottom: '80px' }}>
+      fontFamily: 'Segoe UI, sans-serif', paddingBottom: '20px' }}>
 
       {/* HEADER */}
       <div style={{ background: 'linear-gradient(135deg, #0f172a, #1e3a5f)',
@@ -184,7 +195,7 @@ function DashboardHopital() {
         ].map(tab => (
           <button key={tab.id} onClick={() => setActiveTab(tab.id)}
             style={{ flex: 1, padding: '10px', border: 'none', borderRadius: '12px',
-              cursor: 'pointer', fontWeight: '700', fontSize: '13px',
+              cursor: 'pointer', fontWeight: '700', fontSize: '12px',
               background: activeTab === tab.id ? '#0f172a' : 'transparent',
               color: activeTab === tab.id ? 'white' : '#6b7280' }}>
             {tab.label}
@@ -214,7 +225,6 @@ function DashboardHopital() {
                 boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
                 borderLeft: `4px solid ${r.statut === 'confirme' ? '#16a34a' :
                   r.statut === 'annule' ? '#dc2626' : '#d97706'}` }}>
-
                 <div style={{ display: 'flex', justifyContent: 'space-between',
                   alignItems: 'flex-start', marginBottom: '12px' }}>
                   <div>
@@ -225,8 +235,8 @@ function DashboardHopital() {
                       📞 {r.telephone} · N° {r.numero_rdv}
                     </div>
                   </div>
-                  <span style={{ fontSize: '11px', fontWeight: '700', padding: '4px 10px',
-                    borderRadius: '50px',
+                  <span style={{ fontSize: '11px', fontWeight: '700',
+                    padding: '4px 10px', borderRadius: '50px',
                     background: r.statut === 'confirme' ? '#dcfce7' :
                       r.statut === 'annule' ? '#fee2e2' : '#fef3c7',
                     color: r.statut === 'confirme' ? '#16a34a' :
@@ -235,7 +245,6 @@ function DashboardHopital() {
                       r.statut === 'annule' ? '❌ Annulé' : '⏳ En attente'}
                   </span>
                 </div>
-
                 <div style={{ fontSize: '13px', color: '#374151',
                   marginBottom: '12px', lineHeight: '1.8' }}>
                   {r.service && <div>⚕️ {r.service}</div>}
@@ -243,10 +252,9 @@ function DashboardHopital() {
                     weekday: 'long', day: 'numeric', month: 'long'
                   })}</div>
                   {r.motif && <div style={{ color: '#6b7280' }}>
-                    📝 {r.motif.substring(0, 80)}{r.motif.length > 80 ? '...' : ''}
+                    📝 {r.motif.substring(0, 80)}
                   </div>}
                 </div>
-
                 {r.statut === 'en_attente' && (
                   <div style={{ display: 'flex', gap: '8px' }}>
                     <button onClick={() => traiterRDV(r.id, 'confirme')}
@@ -281,38 +289,30 @@ function DashboardHopital() {
               <h4 style={{ color: '#0f172a', marginBottom: '12px' }}>
                 ➕ Ajouter un médecin
               </h4>
-              <input placeholder="Nom du médecin *"
-                value={nouveauMedecin.nom}
-                onChange={e => setNouveauMedecin({...nouveauMedecin, nom: e.target.value})}
-                style={{ width: '100%', padding: '10px', borderRadius: '8px',
-                  border: '2px solid #e2e8f0', marginBottom: '8px',
-                  boxSizing: 'border-box', fontSize: '14px' }} />
-              <input placeholder="Spécialité *"
-                value={nouveauMedecin.specialite}
-                onChange={e => setNouveauMedecin({...nouveauMedecin, specialite: e.target.value})}
-                style={{ width: '100%', padding: '10px', borderRadius: '8px',
-                  border: '2px solid #e2e8f0', marginBottom: '8px',
-                  boxSizing: 'border-box', fontSize: '14px' }} />
-              <input placeholder="Téléphone"
-                value={nouveauMedecin.telephone}
-                onChange={e => setNouveauMedecin({...nouveauMedecin, telephone: e.target.value})}
-                style={{ width: '100%', padding: '10px', borderRadius: '8px',
-                  border: '2px solid #e2e8f0', marginBottom: '8px',
-                  boxSizing: 'border-box', fontSize: '14px' }} />
+              {['nom', 'specialite', 'telephone'].map(field => (
+                <input key={field}
+                  placeholder={field === 'nom' ? 'Nom du médecin *' :
+                    field === 'specialite' ? 'Spécialité *' : 'Téléphone'}
+                  value={nouveauMedecin[field]}
+                  onChange={e => setNouveauMedecin({...nouveauMedecin, [field]: e.target.value})}
+                  style={{ width: '100%', padding: '10px', borderRadius: '8px',
+                    border: '2px solid #e2e8f0', marginBottom: '8px',
+                    boxSizing: 'border-box', fontSize: '14px' }} />
+              ))}
               <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
                 <div style={{ flex: 1 }}>
                   <label style={{ fontSize: '12px', color: '#6b7280' }}>Heure début</label>
                   <input type="time" value={nouveauMedecin.heure_debut}
                     onChange={e => setNouveauMedecin({...nouveauMedecin, heure_debut: e.target.value})}
                     style={{ width: '100%', padding: '10px', borderRadius: '8px',
-                      border: '2px solid #e2e8f0', boxSizing: 'border-box', fontSize: '14px' }} />
+                      border: '2px solid #e2e8f0', boxSizing: 'border-box' }} />
                 </div>
                 <div style={{ flex: 1 }}>
                   <label style={{ fontSize: '12px', color: '#6b7280' }}>Heure fin</label>
                   <input type="time" value={nouveauMedecin.heure_fin}
                     onChange={e => setNouveauMedecin({...nouveauMedecin, heure_fin: e.target.value})}
                     style={{ width: '100%', padding: '10px', borderRadius: '8px',
-                      border: '2px solid #e2e8f0', boxSizing: 'border-box', fontSize: '14px' }} />
+                      border: '2px solid #e2e8f0', boxSizing: 'border-box' }} />
                 </div>
               </div>
               <input placeholder="Jours de travail (ex: Lun-Ven)"
@@ -330,13 +330,21 @@ function DashboardHopital() {
             </div>
 
             {/* LISTE MÉDECINS */}
+            {medecins.length === 0 && (
+              <div style={{ background: 'white', borderRadius: '16px',
+                padding: '30px', textAlign: 'center',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
+                <div style={{ fontSize: '2rem', marginBottom: '8px' }}>👨‍⚕️</div>
+                <div style={{ color: '#6b7280' }}>Aucun médecin enregistré</div>
+              </div>
+            )}
             {medecins.map(m => (
               <div key={m.id} style={{ background: 'white', borderRadius: '16px',
                 padding: '16px', marginBottom: '10px',
                 boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
                 borderLeft: `4px solid ${m.disponible ? '#16a34a' : '#ef4444'}` }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between',
-                  alignItems: 'flex-start', marginBottom: '10px' }}>
+                  alignItems: 'flex-start' }}>
                   <div>
                     <div style={{ fontWeight: '800', color: '#0f172a' }}>{m.nom}</div>
                     <div style={{ color: '#6b7280', fontSize: '13px' }}>{m.specialite}</div>
@@ -344,18 +352,18 @@ function DashboardHopital() {
                       🕐 {m.heure_debut} - {m.heure_fin} · 📅 {m.jours_travail}
                     </div>
                   </div>
-                  <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                  <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
                     <button onClick={() => toggleDisponibilite(m)}
-                      style={{ padding: '6px 12px', border: 'none', borderRadius: '50px',
-                        cursor: 'pointer', fontWeight: '700', fontSize: '12px',
+                      style={{ padding: '6px 10px', border: 'none', borderRadius: '50px',
+                        cursor: 'pointer', fontWeight: '700', fontSize: '11px',
                         background: m.disponible ? '#dcfce7' : '#fee2e2',
                         color: m.disponible ? '#16a34a' : '#dc2626' }}>
                       {m.disponible ? '✅ Dispo' : '❌ Indispo'}
                     </button>
                     <button onClick={() => supprimerMedecin(m.id)}
                       style={{ padding: '6px 10px', border: 'none', borderRadius: '50px',
-                        cursor: 'pointer', background: '#fee2e2', color: '#dc2626',
-                        fontWeight: '700', fontSize: '12px' }}>
+                        cursor: 'pointer', background: '#fee2e2',
+                        color: '#dc2626', fontWeight: '700', fontSize: '11px' }}>
                       🗑️
                     </button>
                   </div>
@@ -423,7 +431,7 @@ function DashboardHopital() {
                 <button onClick={mettreAJourLits}
                   style={{ padding: '12px 20px', background: '#0f172a',
                     color: 'white', border: 'none', borderRadius: '10px',
-                    cursor: 'pointer', fontWeight: '700' }}>
+                    cursor: 'pointer', fontWeight: '700', fontSize: '14px' }}>
                   ✅ Mettre à jour
                 </button>
               </div>

@@ -396,7 +396,7 @@ def traiter_demande(request, pk):
 # ─────────────────────────────────────────────
 
 @api_view(['PATCH'])
-@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])
 def update_beds(request, pk):
     try:
         hospital = Hospital.objects.get(pk=pk)
@@ -414,7 +414,7 @@ def update_beds(request, pk):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['PATCH'])
-@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])
 def update_service(request, pk):
     try:
         service = Service.objects.get(pk=pk)
