@@ -80,7 +80,8 @@ function DashboardHopital() {
         heure_debut: '08:00', heure_fin: '17:00', jours_travail: 'Lun-Ven' });
       setMessage('✅ Médecin ajouté !');
       setTimeout(() => setMessage(''), 3000);
-    } catch {
+    } catch(err) {
+      console.error(err.response?.data);
       setMessage('❌ Erreur ajout médecin.');
     }
   };
