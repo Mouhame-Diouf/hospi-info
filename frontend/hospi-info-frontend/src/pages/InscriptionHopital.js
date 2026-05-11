@@ -47,6 +47,9 @@ function InscriptionHopital() {
     if (!form.responsable || !form.motdepasse || !form.confirm) {
       setError('Veuillez remplir tous les champs.'); return;
     }
+    if (form.motdepasse.length < 6) {
+      setError('Le mot de passe doit avoir au moins 6 caractères.'); return;
+    }
     if (form.motdepasse !== form.confirm) {
       setError('Les mots de passe ne correspondent pas.'); return;
     }
@@ -57,9 +60,10 @@ function InscriptionHopital() {
         telephone: form.telephone, email: form.email,
         totalLits: form.totalLits, services: form.services,
         responsable: form.responsable,
+        motdepasse: form.motdepasse,
       });
       setSuccess('✅ Demande envoyée ! Un administrateur validera votre inscription sous 24h.');
-      setTimeout(() => navigate('/login'), 3000);
+      setTimeout(() => navigate('/login-hopital'), 3000);
     } catch (err) {
       setError('Erreur lors de l\'envoi. Réessayez.');
     }

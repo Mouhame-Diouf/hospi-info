@@ -186,7 +186,6 @@ def creer_rendezvous(request):
             heure=request.data.get('heure', '08:00:00'),
         )
 
-        # ─── NOTIFICATION EMAIL ───
         try:
             sujet = f"🏥 Nouvelle demande RDV — {rdv.numero_rdv}"
             message = f"""
@@ -203,7 +202,7 @@ Une nouvelle demande de rendez-vous a été reçue sur HOSPI-INFO !
 📝 Motif         : {rdv.motif}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Connectez-vous sur votre dashboard pour confirmer :
+Connectez-vous sur votre dashboard :
 👉 https://hospi-info.vercel.app/login-hopital
 
 — L'équipe HOSPI-INFO
@@ -213,7 +212,6 @@ Connectez-vous sur votre dashboard pour confirmer :
                 destinataires.append(hospital.email)
             send_mail(sujet, message, settings.DEFAULT_FROM_EMAIL,
                      destinataires, fail_silently=True)
-            print(f"✅ Email envoyé pour RDV {rdv.numero_rdv}")
         except Exception as e:
             print(f"❌ Erreur email : {e}")
 
@@ -249,7 +247,6 @@ def update_rendezvous(request, pk):
         if 'statut' in request.data:
             rdv.statut = request.data['statut']
         rdv.save()
-
         try:
             if rdv.statut in ['confirme', 'annule']:
                 sujet = f"HOSPI-INFO — RDV {rdv.numero_rdv} {'confirmé' if rdv.statut == 'confirme' else 'annulé'}"
@@ -262,17 +259,15 @@ Votre rendez-vous {rdv.numero_rdv} a été {'✅ CONFIRMÉ' if rdv.statut == 'co
 📅 Date : {rdv.date}
 {'👨‍⚕️ Médecin : ' + rdv.medecin.nom if rdv.medecin else ''}
 
-{'Présentez-vous à l\'hôpital à l\'heure convenue.' if rdv.statut == 'confirme' else 'Contactez l\'hôpital pour plus d\'informations.'}
-
-📞 Contact : {rdv.hospital.phone or 'Non disponible'}
+{'Présentez-vous à l\'hôpital.' if rdv.statut == 'confirme' else 'Contactez l\'hôpital pour plus d\'informations.'}
+📞 {rdv.hospital.phone or 'Non disponible'}
 
 — L'équipe HOSPI-INFO
                 """
                 send_mail(sujet, message, settings.DEFAULT_FROM_EMAIL,
                          [settings.ADMIN_EMAIL], fail_silently=True)
         except Exception as e:
-            print(f"Erreur email confirmation : {e}")
-
+            print(f"Erreur email : {e}")
         return Response({'message': 'Rendez-vous mis à jour !'})
     except RendezVous.DoesNotExist:
         return Response({'error': 'Rendez-vous introuvable.'}, status=status.HTTP_404_NOT_FOUND)
@@ -337,15 +332,20 @@ def soumettre_demande(request):
     data = request.data
     try:
         demande = DemandeInscription.objects.create(
-            nom=data.get('nom'), ville=data.get('ville'),
-            adresse=data.get('adresse'), telephone=data.get('telephone'),
-            email=data.get('email'), total_lits=data.get('totalLits', 0),
-            services=data.get('services', []), responsable=data.get('responsable'),
+            nom=data.get('nom'),
+            ville=data.get('ville'),
+            adresse=data.get('adresse'),
+            telephone=data.get('telephone'),
+            email=data.get('email'),
+            total_lits=data.get('totalLits', 0),
+            services=data.get('services', []),
+            responsable=data.get('responsable'),
+            motdepasse=data.get('motdepasse', ''),
         )
         try:
             send_mail(
                 f"🏥 Nouvelle inscription — {demande.nom}",
-                f"Nouvelle demande d'inscription :\n\nHôpital : {demande.nom}\nVille : {demande.ville}\nResponsable : {demande.responsable}\nEmail : {demande.email}\nTéléphone : {demande.telephone}\n\nConnectez-vous sur le Super Admin pour approuver.",
+                f"Nouvelle demande :\n\nHôpital : {demande.nom}\nVille : {demande.ville}\nResponsable : {demande.responsable}\nEmail : {demande.email}\nTéléphone : {demande.telephone}\n\nConnectez-vous sur le Super Admin pour approuver.\nhttps://hospi-info.vercel.app/super-admin",
                 settings.DEFAULT_FROM_EMAIL,
                 [settings.ADMIN_EMAIL],
                 fail_silently=True
@@ -377,22 +377,38 @@ def traiter_demande(request, pk):
         demande = DemandeInscription.objects.get(pk=pk)
     except DemandeInscription.DoesNotExist:
         return Response({'error': 'Demande introuvable.'}, status=status.HTTP_404_NOT_FOUND)
+
     nouveau_statut = request.data.get('statut')
+
     if nouveau_statut == 'approuve':
         demande.statut = 'approuve'
         demande.save()
         hospital = Hospital.objects.create(
-            name=demande.nom, city=demande.ville,
-            address=demande.adresse, phone=demande.telephone,
+            name=demande.nom,
+            city=demande.ville,
+            address=demande.adresse,
+            phone=demande.telephone,
             email=demande.email,
-            total_beds=demande.total_lits, available_beds=demande.total_lits,
+            password=demande.motdepasse,
+            total_beds=demande.total_lits,
+            available_beds=demande.total_lits,
         )
         for service in demande.services:
             Service.objects.create(hospital=hospital, name=service, available=True)
         try:
             send_mail(
                 "🎉 Votre hôpital a été approuvé sur HOSPI-INFO !",
-                f"Bonjour {demande.responsable},\n\nVotre hôpital '{demande.nom}' a été approuvé !\n\nConnectez-vous :\n👉 https://hospi-info.vercel.app/login-hopital\n\nEmail : {demande.email}\n\n— HOSPI-INFO",
+                f"""Bonjour {demande.responsable},
+
+Votre hôpital '{demande.nom}' a été approuvé et ajouté sur HOSPI-INFO !
+
+Connectez-vous maintenant :
+👉 https://hospi-info.vercel.app/login-hopital
+
+Email : {demande.email}
+Mot de passe : {demande.motdepasse}
+
+— L'équipe HOSPI-INFO""",
                 settings.DEFAULT_FROM_EMAIL,
                 [demande.email],
                 fail_silently=True
@@ -400,10 +416,22 @@ def traiter_demande(request, pk):
         except:
             pass
         return Response({'message': f'{demande.nom} approuvé !'})
+
     elif nouveau_statut == 'rejete':
         demande.statut = 'rejete'
         demande.save()
+        try:
+            send_mail(
+                "HOSPI-INFO — Demande d'inscription",
+                f"Bonjour {demande.responsable},\n\nVotre demande d'inscription pour '{demande.nom}' n'a pas pu être approuvée.\n\nContactez-nous pour plus d'informations.\n\n— L'équipe HOSPI-INFO",
+                settings.DEFAULT_FROM_EMAIL,
+                [demande.email],
+                fail_silently=True
+            )
+        except:
+            pass
         return Response({'message': f'{demande.nom} rejeté.'})
+
     return Response({'error': 'Statut invalide.'}, status=status.HTTP_400_BAD_REQUEST)
 
 # ─────────────────────────────────────────────

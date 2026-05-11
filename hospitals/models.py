@@ -106,6 +106,7 @@ class DemandeInscription(models.Model):
     statut       = models.CharField(max_length=20, choices=STATUT_CHOICES,
                                     default='en_attente')
     created_at   = models.DateTimeField(auto_now_add=True)
+    motdepasse = models.CharField(max_length=200, blank=True, default='')
 
     def __str__(self):
         return f"{self.nom} — {self.statut}"
