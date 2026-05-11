@@ -8,6 +8,7 @@ function DashboardHopital() {
   const [hopital, setHopital] = useState(null);
   const [rdvs, setRdvs] = useState([]);
   const [medecins, setMedecins] = useState([]);
+  const [services, setServices] = useState([]);
   const [message, setMessage] = useState('');
   const [litsDisponibles, setLitsDisponibles] = useState('');
   const [activeTab, setActiveTab] = useState('rdv');
@@ -15,6 +16,7 @@ function DashboardHopital() {
     nom: '', specialite: '', telephone: '',
     heure_debut: '08:00', heure_fin: '17:00', jours_travail: 'Lun-Ven'
   });
+  const [nouveauService, setNouveauService] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,6 +28,7 @@ function DashboardHopital() {
       .then(res => {
         setHopital(res.data);
         setLitsDisponibles(res.data.available_beds);
+        setServices(res.data.services || []);
       });
 
     axios.get(`${API}/api/hospitals/${h.id}/rendezvous/`)
@@ -37,6 +40,8 @@ function DashboardHopital() {
     const interval = setInterval(() => {
       axios.get(`${API}/api/hospitals/${h.id}/rendezvous/`)
         .then(res => setRdvs(res.data));
+      axios.get(`${API}/api/hospitals/${h.id}/`)
+        .then(res => setServices(res.data.services || []));
     }, 30000);
 
     return () => clearInterval(interval);
@@ -109,6 +114,39 @@ function DashboardHopital() {
     }
   };
 
+  const toggleService = async (service) => {
+    try {
+      await axios.patch(`${API}/api/services/${service.id}/update/`,
+        { available: !service.available });
+      setServices(services.map(s => s.id === service.id ?
+        { ...s, available: !s.available } : s));
+      setMessage(`✅ Service ${service.name} mis à jour !`);
+      setTimeout(() => setMessage(''), 3000);
+    } catch {
+      setMessage('❌ Erreur mise à jour service.');
+    }
+  };
+
+  const ajouterService = async () => {
+    if (!nouveauService.trim()) {
+      alert('Veuillez entrer un nom de service.');
+      return;
+    }
+    try {
+      await axios.post(`${API}/api/hospitals/${hopital.id}/services/`, {
+        name: nouveauService,
+        available: true
+      });
+      const res = await axios.get(`${API}/api/hospitals/${hopital.id}/`);
+      setServices(res.data.services || []);
+      setNouveauService('');
+      setMessage('✅ Service ajouté !');
+      setTimeout(() => setMessage(''), 3000);
+    } catch {
+      setMessage('❌ Erreur ajout service.');
+    }
+  };
+
   const deconnecter = () => {
     localStorage.removeItem('hopital_connecte');
     navigate('/login-hopital');
@@ -157,46 +195,40 @@ function DashboardHopital() {
       )}
 
       {/* STATS */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)',
-        gap: '10px', margin: '16px' }}>
-        <div style={{ background: 'white', borderRadius: '16px', padding: '16px',
-          textAlign: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
-          borderTop: '3px solid #2563eb' }}>
-          <div style={{ fontSize: '1.5rem', fontWeight: '800', color: '#2563eb' }}>
-            {hopital.available_beds}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)',
+        gap: '8px', margin: '16px' }}>
+        {[
+          { label: 'Lits libres', value: hopital.available_beds, color: '#2563eb' },
+          { label: 'RDV attente', value: rdvEnAttente, color: '#d97706' },
+          { label: 'Médecins', value: medecins.filter(m => m.disponible).length, color: '#16a34a' },
+          { label: 'Services', value: services.filter(s => s.available).length, color: '#7c3aed' },
+        ].map((s, i) => (
+          <div key={i} style={{ background: 'white', borderRadius: '12px',
+            padding: '12px', textAlign: 'center',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+            borderTop: `3px solid ${s.color}` }}>
+            <div style={{ fontSize: '1.3rem', fontWeight: '800', color: s.color }}>
+              {s.value}
+            </div>
+            <div style={{ fontSize: '10px', color: '#6b7280' }}>{s.label}</div>
           </div>
-          <div style={{ fontSize: '11px', color: '#6b7280' }}>Lits libres</div>
-        </div>
-        <div style={{ background: 'white', borderRadius: '16px', padding: '16px',
-          textAlign: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
-          borderTop: '3px solid #d97706' }}>
-          <div style={{ fontSize: '1.5rem', fontWeight: '800', color: '#d97706' }}>
-            {rdvEnAttente}
-          </div>
-          <div style={{ fontSize: '11px', color: '#6b7280' }}>RDV en attente</div>
-        </div>
-        <div style={{ background: 'white', borderRadius: '16px', padding: '16px',
-          textAlign: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
-          borderTop: '3px solid #16a34a' }}>
-          <div style={{ fontSize: '1.5rem', fontWeight: '800', color: '#16a34a' }}>
-            {medecins.filter(m => m.disponible).length}
-          </div>
-          <div style={{ fontSize: '11px', color: '#6b7280' }}>Médecins dispo</div>
-        </div>
+        ))}
       </div>
 
       {/* TABS */}
       <div style={{ display: 'flex', margin: '0 16px 16px', background: 'white',
         borderRadius: '16px', padding: '6px', gap: '4px',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
+        boxShadow: '0 2px 8px rgba(0,0,0,0.06)', overflowX: 'auto' }}>
         {[
           { id: 'rdv', label: `📅 RDV (${rdvs.length})` },
-          { id: 'medecins', label: `👨‍⚕️ Médecins (${medecins.length})` },
+          { id: 'medecins', label: `👨‍⚕️ Médecins` },
+          { id: 'services', label: `⚕️ Services` },
           { id: 'lits', label: '🛏️ Lits' },
         ].map(tab => (
           <button key={tab.id} onClick={() => setActiveTab(tab.id)}
             style={{ flex: 1, padding: '10px', border: 'none', borderRadius: '12px',
-              cursor: 'pointer', fontWeight: '700', fontSize: '12px',
+              cursor: 'pointer', fontWeight: '700', fontSize: '11px',
+              whiteSpace: 'nowrap',
               background: activeTab === tab.id ? '#0f172a' : 'transparent',
               color: activeTab === tab.id ? 'white' : '#6b7280' }}>
             {tab.label}
@@ -284,22 +316,43 @@ function DashboardHopital() {
               👨‍⚕️ Gestion des médecins
             </h3>
 
-            {/* AJOUTER MÉDECIN */}
             <div style={{ background: 'white', borderRadius: '16px', padding: '16px',
               marginBottom: '16px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
               <h4 style={{ color: '#0f172a', marginBottom: '12px' }}>
                 ➕ Ajouter un médecin
               </h4>
-              {['nom', 'specialite', 'telephone'].map(field => (
-                <input key={field}
-                  placeholder={field === 'nom' ? 'Nom du médecin *' :
-                    field === 'specialite' ? 'Spécialité *' : 'Téléphone'}
-                  value={nouveauMedecin[field]}
-                  onChange={e => setNouveauMedecin({...nouveauMedecin, [field]: e.target.value})}
-                  style={{ width: '100%', padding: '10px', borderRadius: '8px',
-                    border: '2px solid #e2e8f0', marginBottom: '8px',
-                    boxSizing: 'border-box', fontSize: '14px' }} />
-              ))}
+              <input placeholder="Nom du médecin *"
+                value={nouveauMedecin.nom}
+                onChange={e => setNouveauMedecin({...nouveauMedecin, nom: e.target.value})}
+                style={{ width: '100%', padding: '10px', borderRadius: '8px',
+                  border: '2px solid #e2e8f0', marginBottom: '8px',
+                  boxSizing: 'border-box', fontSize: '14px' }} />
+              <input placeholder="Spécialité *"
+                value={nouveauMedecin.specialite}
+                onChange={e => setNouveauMedecin({...nouveauMedecin, specialite: e.target.value})}
+                style={{ width: '100%', padding: '10px', borderRadius: '8px',
+                  border: '2px solid #e2e8f0', marginBottom: '8px',
+                  boxSizing: 'border-box', fontSize: '14px' }} />
+              <input placeholder="Téléphone"
+                value={nouveauMedecin.telephone}
+                onChange={e => setNouveauMedecin({...nouveauMedecin, telephone: e.target.value})}
+                style={{ width: '100%', padding: '10px', borderRadius: '8px',
+                  border: '2px solid #e2e8f0', marginBottom: '8px',
+                  boxSizing: 'border-box', fontSize: '14px' }} />
+
+              {/* Service du médecin */}
+              <select
+                value={nouveauMedecin.service_id || ''}
+                onChange={e => setNouveauMedecin({...nouveauMedecin, service_id: e.target.value})}
+                style={{ width: '100%', padding: '10px', borderRadius: '8px',
+                  border: '2px solid #e2e8f0', marginBottom: '8px',
+                  boxSizing: 'border-box', fontSize: '14px', cursor: 'pointer' }}>
+                <option value="">Service (optionnel)</option>
+                {services.map(s => (
+                  <option key={s.id} value={s.id}>{s.name}</option>
+                ))}
+              </select>
+
               <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
                 <div style={{ flex: 1 }}>
                   <label style={{ fontSize: '12px', color: '#6b7280' }}>Heure début</label>
@@ -326,11 +379,10 @@ function DashboardHopital() {
                 style={{ width: '100%', padding: '12px', background: '#0f172a',
                   color: 'white', border: 'none', borderRadius: '10px',
                   cursor: 'pointer', fontWeight: '700' }}>
-                ➕ Ajouter
+                ➕ Ajouter le médecin
               </button>
             </div>
 
-            {/* LISTE MÉDECINS */}
             {medecins.length === 0 && (
               <div style={{ background: 'white', borderRadius: '16px',
                 padding: '30px', textAlign: 'center',
@@ -349,11 +401,17 @@ function DashboardHopital() {
                   <div>
                     <div style={{ fontWeight: '800', color: '#0f172a' }}>{m.nom}</div>
                     <div style={{ color: '#6b7280', fontSize: '13px' }}>{m.specialite}</div>
+                    {m.service && (
+                      <div style={{ color: '#7c3aed', fontSize: '12px', fontWeight: '600' }}>
+                        ⚕️ {m.service}
+                      </div>
+                    )}
                     <div style={{ color: '#94a3b8', fontSize: '12px', marginTop: '4px' }}>
                       🕐 {m.heure_debut} - {m.heure_fin} · 📅 {m.jours_travail}
                     </div>
                   </div>
-                  <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                  <div style={{ display: 'flex', gap: '6px', alignItems: 'center',
+                    flexDirection: 'column' }}>
                     <button onClick={() => toggleDisponibilite(m)}
                       style={{ padding: '6px 10px', border: 'none', borderRadius: '50px',
                         cursor: 'pointer', fontWeight: '700', fontSize: '11px',
@@ -365,10 +423,75 @@ function DashboardHopital() {
                       style={{ padding: '6px 10px', border: 'none', borderRadius: '50px',
                         cursor: 'pointer', background: '#fee2e2',
                         color: '#dc2626', fontWeight: '700', fontSize: '11px' }}>
-                      🗑️
+                      🗑️ Supprimer
                     </button>
                   </div>
                 </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* ONGLET SERVICES */}
+        {activeTab === 'services' && (
+          <div>
+            <h3 style={{ color: '#0f172a', marginBottom: '16px' }}>
+              ⚕️ Gestion des services
+            </h3>
+
+            {/* AJOUTER SERVICE */}
+            <div style={{ background: 'white', borderRadius: '16px', padding: '16px',
+              marginBottom: '16px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
+              <h4 style={{ color: '#0f172a', marginBottom: '12px' }}>
+                ➕ Ajouter un service
+              </h4>
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <input placeholder="Ex: Cardiologie, Neurologie..."
+                  value={nouveauService}
+                  onChange={e => setNouveauService(e.target.value)}
+                  onKeyPress={e => e.key === 'Enter' && ajouterService()}
+                  style={{ flex: 1, padding: '10px', borderRadius: '8px',
+                    border: '2px solid #e2e8f0', fontSize: '14px', outline: 'none' }} />
+                <button onClick={ajouterService}
+                  style={{ padding: '10px 16px', background: '#0f172a',
+                    color: 'white', border: 'none', borderRadius: '8px',
+                    cursor: 'pointer', fontWeight: '700' }}>
+                  ➕
+                </button>
+              </div>
+            </div>
+
+            {/* LISTE SERVICES */}
+            {services.length === 0 && (
+              <div style={{ background: 'white', borderRadius: '16px',
+                padding: '30px', textAlign: 'center',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
+                <div style={{ fontSize: '2rem', marginBottom: '8px' }}>⚕️</div>
+                <div style={{ color: '#6b7280' }}>Aucun service enregistré</div>
+              </div>
+            )}
+            {services.map(s => (
+              <div key={s.id} style={{ background: 'white', borderRadius: '16px',
+                padding: '16px', marginBottom: '10px',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+                borderLeft: `4px solid ${s.available ? '#16a34a' : '#ef4444'}`,
+                display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                  <div style={{ fontWeight: '800', color: '#0f172a', fontSize: '15px' }}>
+                    {s.name}
+                  </div>
+                  <div style={{ fontSize: '12px', marginTop: '4px',
+                    color: s.available ? '#16a34a' : '#dc2626', fontWeight: '600' }}>
+                    {s.available ? '✅ Disponible' : '❌ Indisponible'}
+                  </div>
+                </div>
+                <button onClick={() => toggleService(s)}
+                  style={{ padding: '10px 16px', border: 'none', borderRadius: '50px',
+                    cursor: 'pointer', fontWeight: '700', fontSize: '13px',
+                    background: s.available ? '#fee2e2' : '#dcfce7',
+                    color: s.available ? '#dc2626' : '#16a34a' }}>
+                  {s.available ? '❌ Désactiver' : '✅ Activer'}
+                </button>
               </div>
             ))}
           </div>

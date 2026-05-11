@@ -21,6 +21,10 @@ def home(request):
     hospitals = Hospital.objects.all()
     return render(request, 'hospitals/index.html', {'hospitals': hospitals})
 
+# ─────────────────────────────────────────────
+#  ENDPOINTS PUBLICS
+# ─────────────────────────────────────────────
+
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def hospital_list(request):
@@ -127,6 +131,29 @@ def medecin_delete(request, pk):
         return Response({'error': 'Médecin introuvable.'}, status=status.HTTP_404_NOT_FOUND)
 
 # ─────────────────────────────────────────────
+#  ENDPOINTS SERVICES
+# ─────────────────────────────────────────────
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def creer_service(request, hospital_pk):
+    try:
+        hospital = Hospital.objects.get(pk=hospital_pk)
+        service = Service.objects.create(
+            hospital=hospital,
+            name=request.data.get('name'),
+            available=request.data.get('available', True)
+        )
+        return Response({
+            'message': 'Service ajouté !',
+            'id': service.id,
+            'name': service.name,
+            'available': service.available
+        }, status=status.HTTP_201_CREATED)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+# ─────────────────────────────────────────────
 #  ENDPOINTS RENDEZ-VOUS
 # ─────────────────────────────────────────────
 
@@ -168,12 +195,12 @@ Bonjour,
 Une nouvelle demande de rendez-vous a été reçue sur HOSPI-INFO !
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📋 Numéro RDV : {rdv.numero_rdv}
-👤 Patient    : {rdv.nom_patient}
-📞 Téléphone  : {rdv.telephone}
-🏥 Hôpital    : {hospital.name}
-📅 Date souhaitée : {rdv.date}
-📝 Motif      : {rdv.motif}
+📋 Numéro RDV    : {rdv.numero_rdv}
+👤 Patient       : {rdv.nom_patient}
+📞 Téléphone     : {rdv.telephone}
+🏥 Hôpital       : {hospital.name}
+📅 Date souhaitée: {rdv.date}
+📝 Motif         : {rdv.motif}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Connectez-vous sur votre dashboard pour confirmer :
@@ -181,18 +208,11 @@ Connectez-vous sur votre dashboard pour confirmer :
 
 — L'équipe HOSPI-INFO
             """
-
             destinataires = [settings.ADMIN_EMAIL]
             if hospital.email:
                 destinataires.append(hospital.email)
-
-            send_mail(
-                sujet,
-                message,
-                settings.DEFAULT_FROM_EMAIL,
-                destinataires,
-                fail_silently=True
-            )
+            send_mail(sujet, message, settings.DEFAULT_FROM_EMAIL,
+                     destinataires, fail_silently=True)
             print(f"✅ Email envoyé pour RDV {rdv.numero_rdv}")
         except Exception as e:
             print(f"❌ Erreur email : {e}")
@@ -205,7 +225,6 @@ Connectez-vous sur votre dashboard pour confirmer :
 
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
@@ -231,24 +250,23 @@ def update_rendezvous(request, pk):
             rdv.statut = request.data['statut']
         rdv.save()
 
-        # Email au patient quand confirmé ou annulé
         try:
             if rdv.statut in ['confirme', 'annule']:
-                sujet = f"HOSPI-INFO — Votre RDV {rdv.numero_rdv} a été {'confirmé' if rdv.statut == 'confirme' else 'annulé'}"
+                sujet = f"HOSPI-INFO — RDV {rdv.numero_rdv} {'confirmé' if rdv.statut == 'confirme' else 'annulé'}"
                 message = f"""
 Bonjour {rdv.nom_patient},
 
-Votre demande de rendez-vous {rdv.numero_rdv} a été {'✅ CONFIRMÉE' if rdv.statut == 'confirme' else '❌ ANNULÉE'}.
+Votre rendez-vous {rdv.numero_rdv} a été {'✅ CONFIRMÉ' if rdv.statut == 'confirme' else '❌ ANNULÉ'}.
 
 🏥 Hôpital : {rdv.hospital.name}
 📅 Date : {rdv.date}
 {'👨‍⚕️ Médecin : ' + rdv.medecin.nom if rdv.medecin else ''}
 
-{'Présentez-vous à l\'hôpital à l\'heure convenue.' if rdv.statut == 'confirme' else 'Veuillez contacter l\'hôpital pour plus d\'informations.'}
+{'Présentez-vous à l\'hôpital à l\'heure convenue.' if rdv.statut == 'confirme' else 'Contactez l\'hôpital pour plus d\'informations.'}
 
-📞 Contact hôpital : {rdv.hospital.phone or 'Non disponible'}
+📞 Contact : {rdv.hospital.phone or 'Non disponible'}
 
-— L\'équipe HOSPI-INFO
+— L'équipe HOSPI-INFO
                 """
                 send_mail(sujet, message, settings.DEFAULT_FROM_EMAIL,
                          [settings.ADMIN_EMAIL], fail_silently=True)
@@ -306,7 +324,8 @@ def verifier_code(request):
         del codes_temporaires[telephone]
         return Response({'message': 'Code correct !', 'valide': True})
     else:
-        return Response({'error': 'Code incorrect.', 'valide': False}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'error': 'Code incorrect.', 'valide': False},
+                       status=status.HTTP_400_BAD_REQUEST)
 
 # ─────────────────────────────────────────────
 #  ENDPOINTS DEMANDES INSCRIPTION
@@ -323,11 +342,9 @@ def soumettre_demande(request):
             email=data.get('email'), total_lits=data.get('totalLits', 0),
             services=data.get('services', []), responsable=data.get('responsable'),
         )
-
-        # Email notification nouvelle demande
         try:
             send_mail(
-                f"🏥 Nouvelle inscription hôpital — {demande.nom}",
+                f"🏥 Nouvelle inscription — {demande.nom}",
                 f"Nouvelle demande d'inscription :\n\nHôpital : {demande.nom}\nVille : {demande.ville}\nResponsable : {demande.responsable}\nEmail : {demande.email}\nTéléphone : {demande.telephone}\n\nConnectez-vous sur le Super Admin pour approuver.",
                 settings.DEFAULT_FROM_EMAIL,
                 [settings.ADMIN_EMAIL],
@@ -335,7 +352,6 @@ def soumettre_demande(request):
             )
         except:
             pass
-
         return Response({'message': 'Demande soumise !', 'id': demande.id},
                         status=status.HTTP_201_CREATED)
     except Exception as e:
@@ -373,11 +389,10 @@ def traiter_demande(request, pk):
         )
         for service in demande.services:
             Service.objects.create(hospital=hospital, name=service, available=True)
-        # Email à l'hôpital approuvé
         try:
             send_mail(
                 "🎉 Votre hôpital a été approuvé sur HOSPI-INFO !",
-                f"Bonjour {demande.responsable},\n\nVotre hôpital '{demande.nom}' a été approuvé et ajouté sur HOSPI-INFO !\n\nConnectez-vous maintenant :\n👉 https://hospi-info.vercel.app/login-hopital\n\nEmail : {demande.email}\n\n— L'équipe HOSPI-INFO",
+                f"Bonjour {demande.responsable},\n\nVotre hôpital '{demande.nom}' a été approuvé !\n\nConnectez-vous :\n👉 https://hospi-info.vercel.app/login-hopital\n\nEmail : {demande.email}\n\n— HOSPI-INFO",
                 settings.DEFAULT_FROM_EMAIL,
                 [demande.email],
                 fail_silently=True

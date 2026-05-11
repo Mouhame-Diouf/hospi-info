@@ -14,6 +14,8 @@ urlpatterns = [
     path('api/hospitals/<int:hospital_pk>/medecins/create/', views.medecin_create, name='medecin-create'),
     path('api/medecins/<int:pk>/', views.medecin_update, name='medecin-update'),
     path('api/medecins/<int:pk>/delete/', views.medecin_delete, name='medecin-delete'),
+    
+    path('api/hospitals/<int:hospital_pk>/services/', views.creer_service, name='creer-service'),
 
     # Rendez-vous
     path('api/rendezvous/', views.creer_rendezvous, name='creer-rendezvous'),
