@@ -13,6 +13,8 @@ import Chat from './pages/Chat';
 import ServiceDetail from './pages/ServiceDetail';
 import RendezVous from './pages/RendezVous';
 import MesRendezVous from './pages/MesRendezVous';
+import LoginMedecin from './pages/LoginMedecin';
+import DashboardMedecin from './pages/DashboardMedecin';
 
 function App() {
   return (
@@ -32,6 +34,8 @@ function App() {
         <Route path="/rendezvous/:hospitalId" element={<RendezVous />} />
         <Route path="/rendezvous" element={<RendezVous />} />
         <Route path="/mes-rendezvous" element={<MesRendezVous />} />
+        <Route path="/login-medecin" element={<LoginMedecin />} />
+        <Route path="/dashboard-medecin" element={<DashboardMedecin />} />
       </Routes>
     </Router>
   );
