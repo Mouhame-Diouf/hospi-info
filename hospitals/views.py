@@ -455,7 +455,30 @@ def update_beds(request, pk):
             'occupancy_rate': hospital.occupancy_rate,
         })
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+@api_view(['DELETE'])
+@permission_classes([AllowAny])
+def supprimer_hopital(request, pk):
+    try:
+        hospital = Hospital.objects.get(pk=pk)
+        nom = hospital.name
+        hospital.delete()
+        return Response({'message': f'{nom} supprimé !'})
+    except Hospital.DoesNotExist:
+        return Response({'error': 'Hôpital introuvable.'}, status=status.HTTP_404_NOT_FOUND)
 
+@api_view(['PATCH'])
+@permission_classes([AllowAny])
+def modifier_hopital(request, pk):
+    try:
+        hospital = Hospital.objects.get(pk=pk)
+        for field in ['name', 'city', 'address', 'phone', 'email',
+                      'total_beds', 'available_beds']:
+            if field in request.data:
+                setattr(hospital, field, request.data[field])
+        hospital.save()
+        return Response({'message': 'Hôpital mis à jour !'})
+    except Hospital.DoesNotExist:
+        return Response({'error': 'Hôpital introuvable.'}, status=status.HTTP_404_NOT_FOUND)
 @api_view(['PATCH'])
 @permission_classes([AllowAny])
 def update_service(request, pk):

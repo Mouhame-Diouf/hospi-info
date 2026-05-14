@@ -35,4 +35,6 @@ urlpatterns = [
     # Admin
     path('api/hospitals/<int:pk>/beds/', views.update_beds, name='update-beds'),
     path('api/services/<int:pk>/update/', views.update_service, name='update-service'),
+    path('api/hospitals/<int:pk>/delete/', views.supprimer_hopital, name='supprimer-hopital'),
+    path('api/hospitals/<int:pk>/update/', views.modifier_hopital, name='modifier-hopital'),
 ]
