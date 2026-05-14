@@ -151,7 +151,66 @@ function DashboardMedecin() {
             </div>
           </div>
         </div>
-
+        {/* MODIFIER HORAIRES */}
+<div style={{ background: 'white', borderRadius: '20px',
+  padding: '20px', marginBottom: '20px',
+  boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
+  <h3 style={{ color: '#0f172a', marginBottom: '16px', fontSize: '1rem' }}>
+    ✏️ Modifier mes horaires
+  </h3>
+  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr',
+    gap: '12px', marginBottom: '12px' }}>
+    <div>
+      <label style={{ fontSize: '12px', color: '#6b7280', fontWeight: '700' }}>
+        Heure début
+      </label>
+      <input type="time"
+        value={medecin.heure_debut}
+        onChange={e => setMedecin({...medecin, heure_debut: e.target.value})}
+        style={{ width: '100%', padding: '10px', borderRadius: '10px',
+          border: '2px solid #e2e8f0', boxSizing: 'border-box',
+          fontSize: '14px', marginTop: '4px' }} />
+    </div>
+    <div>
+      <label style={{ fontSize: '12px', color: '#6b7280', fontWeight: '700' }}>
+        Heure fin
+      </label>
+      <input type="time"
+        value={medecin.heure_fin}
+        onChange={e => setMedecin({...medecin, heure_fin: e.target.value})}
+        style={{ width: '100%', padding: '10px', borderRadius: '10px',
+          border: '2px solid #e2e8f0', boxSizing: 'border-box',
+          fontSize: '14px', marginTop: '4px' }} />
+    </div>
+  </div>
+  <input placeholder="Jours de travail (ex: Lun-Ven)"
+    value={medecin.jours_travail}
+    onChange={e => setMedecin({...medecin, jours_travail: e.target.value})}
+    style={{ width: '100%', padding: '10px', borderRadius: '10px',
+      border: '2px solid #e2e8f0', boxSizing: 'border-box',
+      fontSize: '14px', marginBottom: '12px' }} />
+  <button onClick={async () => {
+    setLoading(true);
+    try {
+      await axios.patch(`${API}/api/medecins/${medecin.id}/`, {
+        heure_debut: medecin.heure_debut,
+        heure_fin: medecin.heure_fin,
+        jours_travail: medecin.jours_travail,
+      });
+      localStorage.setItem('medecin_connecte', JSON.stringify(medecin));
+      setMessage('✅ Horaires mis à jour !');
+      setTimeout(() => setMessage(''), 3000);
+    } catch {
+      setMessage('❌ Erreur mise à jour horaires.');
+    }
+    setLoading(false);
+  }}
+    style={{ width: '100%', padding: '12px', background: '#0f172a',
+      color: 'white', border: 'none', borderRadius: '10px',
+      cursor: 'pointer', fontWeight: '700', fontSize: '14px' }}>
+    💾 Sauvegarder les horaires
+  </button>
+</div>
         {/* BOUTON DISPONIBILITÉ */}
         <button onClick={toggleDisponibilite} disabled={loading}
           style={{ width: '100%', padding: '20px',
