@@ -29,7 +29,7 @@ function Landing() {
           HOSPI-INFO
         </h1>
         <p style={{ fontSize: '1.2rem', opacity: 0.9, marginBottom: '16px' }}>
-          Disponibilité hospitalière en temps réel
+          Disponibilité hospitalière en temps réel au Sénégal
         </p>
 
         <div style={{
@@ -37,8 +37,8 @@ function Landing() {
           padding: '24px', marginBottom: '32px', textAlign: 'left'
         }}>
           <p style={{ marginBottom: '12px', fontSize: '15px', lineHeight: '1.7' }}>
-            🔍 <strong>HOSPI-INFO</strong> est une plateforme numérique qui permet de suivre
-            en temps réel la disponibilité des lits hospitaliers au Sénégal.
+            🔍 <strong>HOSPI-INFO</strong> est une plateforme numérique qui permet
+            de suivre en temps réel la disponibilité des lits hospitaliers au Sénégal.
           </p>
           <p style={{ marginBottom: '12px', fontSize: '15px', lineHeight: '1.7' }}>
             🚑 Elle aide les <strong>ambulanciers</strong> et les <strong>familles</strong> à
@@ -50,55 +50,19 @@ function Landing() {
           </p>
         </div>
 
-        {/* BOUTONS */}
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
-          <button
-            onClick={() => navigate('/home')}
-            style={{
-              background: '#ffffff', color: '#1d72b8',
-              border: 'none', padding: '16px 48px',
-              borderRadius: '50px', fontSize: '18px',
-              fontWeight: 'bold', cursor: 'pointer',
-              boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
-              width: '100%', maxWidth: '320px'
-            }}>
-            Accéder à l'application →
-          </button>
-
-          <button
-            onClick={() => navigate('/inscription-hopital')}
-            style={{
-              background: 'transparent',
-              color: 'white',
-              border: '2px solid rgba(255,255,255,0.6)',
-              padding: '14px 48px',
-              borderRadius: '50px',
-              fontSize: '16px',
-              fontWeight: '600',
-              cursor: 'pointer',
-              width: '100%',
-              maxWidth: '320px'
-            }}>
-            🏥 Inscrire mon hôpital
-          </button>
-
-          <button
-            onClick={() => navigate('/super-admin')}
-            style={{
-              background: 'rgba(255,255,255,0.1)',
-              color: 'rgba(255,255,255,0.7)',
-              border: '1px solid rgba(255,255,255,0.3)',
-              padding: '10px 32px',
-              borderRadius: '50px',
-              fontSize: '13px',
-              fontWeight: '500',
-              cursor: 'pointer',
-              width: '100%',
-              maxWidth: '320px'
-            }}>
-            ⚙️ Espace Super Admin
-          </button>
-        </div>
+        {/* BOUTON UNIQUE */}
+        <button
+          onClick={() => navigate('/home')}
+          style={{
+            background: '#ffffff', color: '#1d72b8',
+            border: 'none', padding: '16px 48px',
+            borderRadius: '50px', fontSize: '18px',
+            fontWeight: 'bold', cursor: 'pointer',
+            boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
+            width: '100%', maxWidth: '320px'
+          }}>
+          Accéder à l'application →
+        </button>
 
         <p style={{ marginTop: '24px', fontSize: '13px', opacity: 0.6 }}>
           Projet de fin d'études — Génie Informatique 2026
