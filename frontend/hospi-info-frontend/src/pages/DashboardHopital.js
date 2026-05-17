@@ -61,11 +61,13 @@ function DashboardHopital() {
     }
   };
 
-  const traiterRDV = async (id, statut) => {
+  const traiterRDV = async (id, statut, heure = null) => {
     try {
-      await axios.patch(`${API}/api/rendezvous/${id}/`, { statut });
-      setRdvs(rdvs.map(r => r.id === id ? { ...r, statut } : r));
-      setMessage(statut === 'confirme' ? '✅ Rendez-vous confirmé !' : '❌ Rendez-vous annulé.');
+      const data = { statut };
+      if (heure) data.heure = heure;
+      await axios.patch(`${API}/api/rendezvous/${id}/`, data);
+      setRdvs(rdvs.map(r => r.id === id ? { ...r, statut, heure: heure || r.heure } : r));
+      setMessage(statut === 'confirme' ? '✅ RDV confirmé avec heure fixée !' : '❌ RDV annulé.');
       setTimeout(() => setMessage(''), 3000);
     } catch {
       setMessage('❌ Erreur.');
@@ -86,7 +88,6 @@ function DashboardHopital() {
       setMessage('✅ Médecin ajouté !');
       setTimeout(() => setMessage(''), 3000);
     } catch(err) {
-      console.error(err.response?.data);
       setMessage('❌ Erreur ajout médecin.');
     }
   };
@@ -134,8 +135,7 @@ function DashboardHopital() {
     }
     try {
       await axios.post(`${API}/api/hospitals/${hopital.id}/services/`, {
-        name: nouveauService,
-        available: true
+        name: nouveauService, available: true
       });
       const res = await axios.get(`${API}/api/hospitals/${hopital.id}/`);
       setServices(res.data.services || []);
@@ -258,14 +258,16 @@ function DashboardHopital() {
                 boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
                 borderLeft: `4px solid ${r.statut === 'confirme' ? '#16a34a' :
                   r.statut === 'annule' ? '#dc2626' : '#d97706'}` }}>
+
+                {/* EN-TÊTE RDV */}
                 <div style={{ display: 'flex', justifyContent: 'space-between',
                   alignItems: 'flex-start', marginBottom: '12px' }}>
                   <div>
-                    <div style={{ fontWeight: '800', color: '#0f172a' }}>
+                    <div style={{ fontWeight: '800', color: '#0f172a', fontSize: '15px' }}>
                       {r.nom_patient}
                     </div>
                     <div style={{ color: '#6b7280', fontSize: '13px' }}>
-                      📞 {r.telephone} · N° {r.numero_rdv}
+                      N° {r.numero_rdv}
                     </div>
                   </div>
                   <span style={{ fontSize: '11px', fontWeight: '700',
@@ -278,30 +280,111 @@ function DashboardHopital() {
                       r.statut === 'annule' ? '❌ Annulé' : '⏳ En attente'}
                   </span>
                 </div>
+
+                {/* DÉTAILS */}
                 <div style={{ fontSize: '13px', color: '#374151',
-                  marginBottom: '12px', lineHeight: '1.8' }}>
-                  {r.service && <div>⚕️ {r.service}</div>}
-                  <div>📅 {new Date(r.date).toLocaleDateString('fr-FR', {
+                  marginBottom: '12px', lineHeight: '1.8',
+                  background: '#f8fafc', borderRadius: '10px', padding: '10px' }}>
+                  {r.service && <div>⚕️ Service : <strong>{r.service}</strong></div>}
+                  <div>📅 Date souhaitée : <strong>{new Date(r.date).toLocaleDateString('fr-FR', {
                     weekday: 'long', day: 'numeric', month: 'long'
-                  })}</div>
-                  {r.motif && <div style={{ color: '#6b7280' }}>
-                    📝 {r.motif.substring(0, 80)}
-                  </div>}
+                  })}</strong></div>
+                  {r.heure && r.heure !== '00:00:00' && (
+                    <div>🕐 Heure fixée : <strong style={{ color: '#2563eb' }}>
+                      {r.heure.substring(0, 5)}
+                    </strong></div>
+                  )}
+                  {r.motif && (
+                    <div>📝 Motif : {r.motif.substring(0, 100)}</div>
+                  )}
                 </div>
+
+                {/* BOUTON APPELER - toujours visible */}
+                <button onClick={() => window.open(`tel:${r.telephone}`)}
+                  style={{ width: '100%', padding: '12px',
+                    background: '#0f172a', color: 'white',
+                    border: 'none', borderRadius: '10px',
+                    cursor: 'pointer', fontWeight: '700',
+                    fontSize: '14px', marginBottom: '10px',
+                    display: 'flex', alignItems: 'center',
+                    justifyContent: 'center', gap: '8px' }}>
+                  📞 Appeler {r.nom_patient} — {r.telephone}
+                </button>
+
+                {/* ACTIONS SELON STATUT */}
                 {r.statut === 'en_attente' && (
-                  <div style={{ display: 'flex', gap: '8px' }}>
-                    <button onClick={() => traiterRDV(r.id, 'confirme')}
-                      style={{ flex: 1, padding: '10px', background: '#16a34a',
-                        color: 'white', border: 'none', borderRadius: '10px',
-                        cursor: 'pointer', fontWeight: '700', fontSize: '13px' }}>
-                      ✅ Confirmer
-                    </button>
-                    <button onClick={() => traiterRDV(r.id, 'annule')}
-                      style={{ flex: 1, padding: '10px', background: '#dc2626',
-                        color: 'white', border: 'none', borderRadius: '10px',
-                        cursor: 'pointer', fontWeight: '700', fontSize: '13px' }}>
-                      ❌ Annuler
-                    </button>
+                  <div>
+                    {/* FIXER L'HEURE */}
+                    <div style={{ background: '#eff6ff', borderRadius: '12px',
+                      padding: '14px', marginBottom: '10px',
+                      border: '2px solid #2563eb' }}>
+                      <div style={{ fontSize: '13px', fontWeight: '700',
+                        color: '#1d4ed8', marginBottom: '8px' }}>
+                        🕐 Fixez l'heure du rendez-vous *
+                      </div>
+                      <div style={{ fontSize: '12px', color: '#6b7280',
+                        marginBottom: '8px' }}>
+                        Choisissez l'heure qui convient pour ce jour ou le lendemain
+                      </div>
+                      <input type="time"
+                        id={`heure-${r.id}`}
+                        defaultValue="08:00"
+                        style={{ width: '100%', padding: '12px',
+                          borderRadius: '8px', border: '2px solid #2563eb',
+                          boxSizing: 'border-box', fontSize: '18px',
+                          fontWeight: '800', textAlign: 'center',
+                          color: '#1d4ed8', outline: 'none' }} />
+                    </div>
+
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      <button onClick={() => {
+                        const heure = document.getElementById(`heure-${r.id}`).value;
+                        if (!heure) { alert('Veuillez fixer une heure !'); return; }
+                        traiterRDV(r.id, 'confirme', heure);
+                      }}
+                        style={{ flex: 2, padding: '12px', background: '#16a34a',
+                          color: 'white', border: 'none', borderRadius: '10px',
+                          cursor: 'pointer', fontWeight: '700', fontSize: '13px' }}>
+                        ✅ Confirmer à cette heure
+                      </button>
+                      <button onClick={() => traiterRDV(r.id, 'annule')}
+                        style={{ flex: 1, padding: '12px', background: '#dc2626',
+                          color: 'white', border: 'none', borderRadius: '10px',
+                          cursor: 'pointer', fontWeight: '700', fontSize: '13px' }}>
+                        ❌ Annuler
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* SI CONFIRMÉ */}
+                {r.statut === 'confirme' && (
+                  <div style={{ background: '#dcfce7', borderRadius: '12px',
+                    padding: '14px', textAlign: 'center',
+                    border: '2px solid #16a34a' }}>
+                    <div style={{ fontSize: '12px', color: '#16a34a',
+                      fontWeight: '700', marginBottom: '4px' }}>
+                      ✅ RENDEZ-VOUS CONFIRMÉ
+                    </div>
+                    <div style={{ fontSize: '2rem', fontWeight: '800',
+                      color: '#16a34a' }}>
+                      🕐 {r.heure ? r.heure.substring(0, 5) : 'Heure non définie'}
+                    </div>
+                    <div style={{ fontSize: '12px', color: '#6b7280', marginTop: '4px' }}>
+                      {new Date(r.date).toLocaleDateString('fr-FR', {
+                        weekday: 'long', day: 'numeric', month: 'long'
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* SI ANNULÉ */}
+                {r.statut === 'annule' && (
+                  <div style={{ background: '#fee2e2', borderRadius: '12px',
+                    padding: '12px', textAlign: 'center' }}>
+                    <div style={{ color: '#dc2626', fontWeight: '700', fontSize: '13px' }}>
+                      ❌ Rendez-vous annulé — Contactez le patient si nécessaire
+                    </div>
                   </div>
                 )}
               </div>
@@ -333,14 +416,12 @@ function DashboardHopital() {
                 style={{ width: '100%', padding: '10px', borderRadius: '8px',
                   border: '2px solid #e2e8f0', marginBottom: '8px',
                   boxSizing: 'border-box', fontSize: '14px' }} />
-              <input placeholder="Téléphone"
+              <input placeholder="Téléphone *"
                 value={nouveauMedecin.telephone}
                 onChange={e => setNouveauMedecin({...nouveauMedecin, telephone: e.target.value})}
                 style={{ width: '100%', padding: '10px', borderRadius: '8px',
                   border: '2px solid #e2e8f0', marginBottom: '8px',
                   boxSizing: 'border-box', fontSize: '14px' }} />
-
-              {/* Service du médecin */}
               <select
                 value={nouveauMedecin.service_id || ''}
                 onChange={e => setNouveauMedecin({...nouveauMedecin, service_id: e.target.value})}
@@ -352,7 +433,6 @@ function DashboardHopital() {
                   <option key={s.id} value={s.id}>{s.name}</option>
                 ))}
               </select>
-
               <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
                 <div style={{ flex: 1 }}>
                   <label style={{ fontSize: '12px', color: '#6b7280' }}>Heure début</label>
@@ -397,7 +477,7 @@ function DashboardHopital() {
                 boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
                 borderLeft: `4px solid ${m.disponible ? '#16a34a' : '#ef4444'}` }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between',
-                  alignItems: 'flex-start' }}>
+                  alignItems: 'flex-start', marginBottom: '10px' }}>
                   <div>
                     <div style={{ fontWeight: '800', color: '#0f172a' }}>{m.nom}</div>
                     <div style={{ color: '#6b7280', fontSize: '13px' }}>{m.specialite}</div>
@@ -410,8 +490,8 @@ function DashboardHopital() {
                       🕐 {m.heure_debut} - {m.heure_fin} · 📅 {m.jours_travail}
                     </div>
                   </div>
-                  <div style={{ display: 'flex', gap: '6px', alignItems: 'center',
-                    flexDirection: 'column' }}>
+                  <div style={{ display: 'flex', gap: '6px', flexDirection: 'column',
+                    alignItems: 'flex-end' }}>
                     <button onClick={() => toggleDisponibilite(m)}
                       style={{ padding: '6px 10px', border: 'none', borderRadius: '50px',
                         cursor: 'pointer', fontWeight: '700', fontSize: '11px',
@@ -423,10 +503,20 @@ function DashboardHopital() {
                       style={{ padding: '6px 10px', border: 'none', borderRadius: '50px',
                         cursor: 'pointer', background: '#fee2e2',
                         color: '#dc2626', fontWeight: '700', fontSize: '11px' }}>
-                      🗑️ Supprimer
+                      🗑️
                     </button>
                   </div>
                 </div>
+                {/* Appeler le médecin */}
+                {m.telephone && (
+                  <button onClick={() => window.open(`tel:${m.telephone}`)}
+                    style={{ width: '100%', padding: '8px', background: '#f0f7ff',
+                      color: '#2563eb', border: '1px solid #2563eb',
+                      borderRadius: '8px', cursor: 'pointer',
+                      fontWeight: '700', fontSize: '12px' }}>
+                    📞 Appeler {m.nom} — {m.telephone}
+                  </button>
+                )}
               </div>
             ))}
           </div>
@@ -439,7 +529,6 @@ function DashboardHopital() {
               ⚕️ Gestion des services
             </h3>
 
-            {/* AJOUTER SERVICE */}
             <div style={{ background: 'white', borderRadius: '16px', padding: '16px',
               marginBottom: '16px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
               <h4 style={{ color: '#0f172a', marginBottom: '12px' }}>
@@ -461,7 +550,6 @@ function DashboardHopital() {
               </div>
             </div>
 
-            {/* LISTE SERVICES */}
             {services.length === 0 && (
               <div style={{ background: 'white', borderRadius: '16px',
                 padding: '30px', textAlign: 'center',
