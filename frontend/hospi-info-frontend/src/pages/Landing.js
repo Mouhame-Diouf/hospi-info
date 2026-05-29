@@ -5,69 +5,77 @@ function Landing() {
   const navigate = useNavigate();
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      backgroundImage: 'url(/hospi-info.jpg)',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      position: 'relative',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center'
-    }}>
-      <div style={{
-        position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
-        background: 'rgba(0, 50, 120, 0.75)'
-      }}></div>
+    <div style={{ minHeight: '100vh',
+      background: 'linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%)',
+      display: 'flex', flexDirection: 'column',
+      alignItems: 'center', justifyContent: 'center',
+      fontFamily: 'Segoe UI, sans-serif', padding: '20px' }}>
 
-      <div style={{
-        position: 'relative', zIndex: 1, textAlign: 'center',
-        color: 'white', padding: '40px', maxWidth: '700px'
-      }}>
-        <div style={{ fontSize: '4rem', marginBottom: '16px' }}>🏥</div>
-        <h1 style={{ fontSize: '3rem', fontWeight: 'bold', marginBottom: '12px' }}>
+      {/* LOGO */}
+      <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+        <div style={{ fontSize: '4rem', marginBottom: '12px' }}>🏥</div>
+        <div style={{ color: 'white', fontSize: '2.5rem',
+          fontWeight: '800', letterSpacing: '2px' }}>
           HOSPI-INFO
-        </h1>
-        <p style={{ fontSize: '1.2rem', opacity: 0.9, marginBottom: '16px' }}>
-          Disponibilité hospitalière en temps réel au Sénégal
-        </p>
-
-        <div style={{
-          background: 'rgba(255,255,255,0.15)', borderRadius: '12px',
-          padding: '24px', marginBottom: '32px', textAlign: 'left'
-        }}>
-          <p style={{ marginBottom: '12px', fontSize: '15px', lineHeight: '1.7' }}>
-            🔍 <strong>HOSPI-INFO</strong> est une plateforme numérique qui permet
-            de suivre en temps réel la disponibilité des lits hospitaliers au Sénégal.
-          </p>
-          <p style={{ marginBottom: '12px', fontSize: '15px', lineHeight: '1.7' }}>
-            🚑 Elle aide les <strong>ambulanciers</strong> et les <strong>familles</strong> à
-            localiser rapidement un hôpital disponible en cas d'urgence.
-          </p>
-          <p style={{ fontSize: '15px', lineHeight: '1.7' }}>
-            🏨 Les <strong>établissements de santé</strong> peuvent mettre à jour
-            leurs informations en temps réel via une interface sécurisée.
-          </p>
         </div>
-
-        {/* BOUTON UNIQUE */}
-        <button
-          onClick={() => navigate('/home')}
-          style={{
-            background: '#ffffff', color: '#1d72b8',
-            border: 'none', padding: '16px 48px',
-            borderRadius: '50px', fontSize: '18px',
-            fontWeight: 'bold', cursor: 'pointer',
-            boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
-            width: '100%', maxWidth: '320px'
-          }}>
-          Accéder à l'application →
-        </button>
-
-        <p style={{ marginTop: '24px', fontSize: '13px', opacity: 0.6 }}>
-          Projet de fin d'études — Génie Informatique 2026
-        </p>
+        <div style={{ color: '#4ade80', fontSize: '14px',
+          fontWeight: '600', marginTop: '8px', letterSpacing: '1px' }}>
+          DISPONIBILITÉ HOSPITALIÈRE EN TEMPS RÉEL
+        </div>
       </div>
+
+      {/* DESCRIPTION */}
+      <div style={{ color: '#94a3b8', fontSize: '15px', textAlign: 'center',
+        maxWidth: '360px', lineHeight: '1.6', marginBottom: '48px' }}>
+        Trouvez instantanément un hôpital disponible près de chez vous au Sénégal
+      </div>
+
+      {/* BOUTON PRINCIPAL - PATIENT */}
+      <button onClick={() => navigate('/home')}
+        style={{ width: '100%', maxWidth: '340px', padding: '18px',
+          background: 'linear-gradient(135deg, #2563eb, #1d4ed8)',
+          color: 'white', border: 'none', borderRadius: '16px',
+          cursor: 'pointer', fontWeight: '800', fontSize: '16px',
+          marginBottom: '14px', boxShadow: '0 8px 24px rgba(37,99,235,0.4)' }}>
+        🏥 Accéder à l'application
+      </button>
+
+      {/* BOUTON PROFESSIONNEL - CONNEXION UNIQUE */}
+      <button onClick={() => navigate('/connexion')}
+        style={{ width: '100%', maxWidth: '340px', padding: '16px',
+          background: 'rgba(255,255,255,0.08)',
+          color: 'white', border: '2px solid rgba(255,255,255,0.2)',
+          borderRadius: '16px', cursor: 'pointer',
+          fontWeight: '700', fontSize: '15px', marginBottom: '14px' }}>
+        👨‍⚕️ Espace Professionnel
+      </button>
+
+      {/* BOUTON INSCRIPTION HÔPITAL */}
+      <button onClick={() => navigate('/inscription-hopital')}
+        style={{ width: '100%', maxWidth: '340px', padding: '16px',
+          background: 'rgba(74,222,128,0.1)',
+          color: '#4ade80', border: '2px solid rgba(74,222,128,0.3)',
+          borderRadius: '16px', cursor: 'pointer',
+          fontWeight: '700', fontSize: '15px' }}>
+        ➕ Inscrire mon hôpital
+      </button>
+
+      {/* STATS */}
+      <div style={{ display: 'flex', gap: '32px', marginTop: '48px' }}>
+        {[
+          { value: '6+', label: 'Hôpitaux' },
+          { value: '24/7', label: 'Disponible' },
+          { value: '100%', label: 'Gratuit' },
+        ].map((s, i) => (
+          <div key={i} style={{ textAlign: 'center' }}>
+            <div style={{ color: '#4ade80', fontSize: '1.4rem', fontWeight: '800' }}>
+              {s.value}
+            </div>
+            <div style={{ color: '#64748b', fontSize: '12px' }}>{s.label}</div>
+          </div>
+        ))}
+      </div>
+
     </div>
   );
 }

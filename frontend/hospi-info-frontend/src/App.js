@@ -16,6 +16,7 @@ import MesRendezVous from './pages/MesRendezVous';
 import LoginMedecin from './pages/LoginMedecin';
 import DashboardMedecin from './pages/DashboardMedecin';
 import ConnexionUnique from './pages/ConnexionUnique';
+import { Navigate } from 'react-router-dom';
 
 function App() {
   return (
@@ -29,13 +30,14 @@ function App() {
         <Route path="/stats" element={<Stats />} />
         <Route path="/inscription-hopital" element={<InscriptionHopital />} />
         <Route path="/super-admin" element={<SuperAdmin />} />
-        <Route path="/login-hopital" element={<LoginHopital />} />
+        <Route path="/login-hopital" element={<Navigate to="/connexion" />} />
+
         <Route path="/dashboard-hopital" element={<DashboardHopital />} />
         <Route path="/chat" element={<Chat />} />
         <Route path="/rendezvous/:hospitalId" element={<RendezVous />} />
         <Route path="/rendezvous" element={<RendezVous />} />
         <Route path="/mes-rendezvous" element={<MesRendezVous />} />
-        <Route path="/login-medecin" element={<LoginMedecin />} />
+        <Route path="/login-medecin" element={<Navigate to="/connexion" />} />
         <Route path="/dashboard-medecin" element={<DashboardMedecin />} />
         <Route path="/connexion" element={<ConnexionUnique />} />
       </Routes>
