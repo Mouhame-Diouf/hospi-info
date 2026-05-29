@@ -15,6 +15,7 @@ import RendezVous from './pages/RendezVous';
 import MesRendezVous from './pages/MesRendezVous';
 import LoginMedecin from './pages/LoginMedecin';
 import DashboardMedecin from './pages/DashboardMedecin';
+import ConnexionUnique from './pages/ConnexionUnique';
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
         <Route path="/mes-rendezvous" element={<MesRendezVous />} />
         <Route path="/login-medecin" element={<LoginMedecin />} />
         <Route path="/dashboard-medecin" element={<DashboardMedecin />} />
+        <Route path="/connexion" element={<ConnexionUnique />} />
       </Routes>
     </Router>
   );

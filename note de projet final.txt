@@ -24,3 +24,17 @@ https://www.pythonanywhere.com/user/MouhaemedDiouf221/
 https://hospi-info.vercel.app/
 
 http://127.0.0.1:8000/admin/hospitals/medecin/(enregistrement des medecin ici)
+				
+
+
+			pour les hopitaux 
+inscriptions
+https://hospi-info.vercel.app/dashboard-hopital(directeur avec lemail de l'hopital)
+
+https://hospi-info.vercel.app/dashboard-medecin(medcin avec son numero de telephone)
+Liens privés — connus seulement par vous et les directeurs :
+
+hospi-info.vercel.app/login-hopital → dashboard hôpital
+hospi-info.vercel.app/login-medecin → dashboard médecin
+hospi-info.vercel.app/super-admin → votre espace admin
+hospi-info.vercel.app/inscription-hopital → 
