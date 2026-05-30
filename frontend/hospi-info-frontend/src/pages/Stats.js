@@ -115,18 +115,7 @@ function Stats() {
         <div style={{ background: 'rgba(0,20,60,0.85)', color: 'white', marginTop: '40px',
           padding: '40px 20px', textAlign: 'center' }}>
           <div style={{ marginBottom: '20px', opacity: 0.8, fontSize: '14px' }}>
-            Projet de fin d'études — Génie Informatique 2026
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '60px', flexWrap: 'wrap', marginBottom: '20px' }}>
-            <div>
-              <div style={{ fontWeight: '700', fontSize: '16px', marginBottom: '8px' }}>Mouhamed Diouf</div>
-              <div style={{ opacity: 0.8, fontSize: '14px' }}>📞 +221 77 680 06 74</div>
-              <div style={{ opacity: 0.8, fontSize: '14px' }}>✉️ Mouhamediouf776800@gmail.com</div>
-            </div>
-            <div>
-              <div style={{ fontWeight: '700', fontSize: '16px', marginBottom: '8px' }}>Assietou Ndong</div>
-              <div style={{ opacity: 0.8, fontSize: '14px' }}>Co-développeuse</div>
-            </div>
+          
           </div>
           <div style={{ opacity: 0.5, fontSize: '12px', borderTop: '1px solid rgba(255,255,255,0.2)', paddingTop: '20px' }}>
             © 2026 HOSPI-INFO — Tous droits réservés
