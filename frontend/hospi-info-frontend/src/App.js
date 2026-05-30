@@ -7,13 +7,13 @@ import Admin from './pages/Admin';
 import Stats from './pages/Stats';
 import InscriptionHopital from './pages/InscriptionHopital';
 import SuperAdmin from './pages/SuperAdmin';
-import LoginHopital from './pages/LoginHopital';
+
 import DashboardHopital from './pages/DashboardHopital';
 import Chat from './pages/Chat';
 import ServiceDetail from './pages/ServiceDetail';
 import RendezVous from './pages/RendezVous';
 import MesRendezVous from './pages/MesRendezVous';
-import LoginMedecin from './pages/LoginMedecin';
+
 import DashboardMedecin from './pages/DashboardMedecin';
 import ConnexionUnique from './pages/ConnexionUnique';
 import { Navigate } from 'react-router-dom';
@@ -31,7 +31,6 @@ function App() {
         <Route path="/inscription-hopital" element={<InscriptionHopital />} />
         <Route path="/super-admin" element={<SuperAdmin />} />
         <Route path="/login-hopital" element={<Navigate to="/connexion" />} />
-
         <Route path="/dashboard-hopital" element={<DashboardHopital />} />
         <Route path="/chat" element={<Chat />} />
         <Route path="/rendezvous/:hospitalId" element={<RendezVous />} />
