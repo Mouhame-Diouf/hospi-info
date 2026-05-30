@@ -350,15 +350,15 @@ function Home() {
       </div>
 
       {/* FOOTER */}
-      <div style={{ background: '#0f172a', color: 'white',
-        padding: '24px 20px', textAlign: 'center' }}>
-        <div style={{ fontWeight: '800', fontSize: '1rem', marginBottom: '4px' }}>
-          🏥 HOSPI-INFO
-        </div>
-        <div style={{ opacity: 0.5, fontSize: '11px' }}>
-          © 2026 — Génie Informatique — Mouhamed Diouf & Assietou Ndong
-        </div>
-      </div>
+      <div style={{ background: '#0f172a', padding: '16px', textAlign: 'center' }}>
+  <div style={{ color: 'white', fontWeight: '800', fontSize: '14px' }}>
+    🏥 HOSPI-INFO
+  </div>
+  <div style={{ color: '#64748b', fontSize: '11px', marginTop: '4px' }}>
+    © 2026 — Tous droits réservés
+  </div>
+</div>
+      
 
     </div>
   );
