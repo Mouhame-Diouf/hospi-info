@@ -120,7 +120,7 @@ function Admin() {
         <div style={{ background: 'rgba(0,20,60,0.85)', color: 'white', marginTop: '40px',
           padding: '40px 20px', textAlign: 'center' }}>
           <div style={{ marginBottom: '20px', opacity: 0.8, fontSize: '14px' }}>
-            Projet de fin d'études — Génie Informatique 2026
+            Projet de fin d'études - Génie Informatique 2026
           </div>
           <div style={{ display: 'flex', justifyContent: 'center', gap: '60px', flexWrap: 'wrap', marginBottom: '20px' }}>
             
@@ -130,7 +130,7 @@ function Admin() {
             </div>
           </div>
           <div style={{ opacity: 0.5, fontSize: '12px', borderTop: '1px solid rgba(255,255,255,0.2)', paddingTop: '20px' }}>
-            © 2026 HOSPI-INFO — Tous droits réservés
+            © 2026 HOSPI-INFO - Tous droits réservés
           </div>
         </div>
 

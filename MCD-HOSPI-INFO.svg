@@ -1,0 +1,436 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2000" height="2400" viewBox="0 0 2000 2400">
+  <rect width="2000" height="2400" fill="#E8E8E8"/>
+
+  <!-- TITRE -->
+  <rect x="10" y="8" width="1980" height="40" rx="4" fill="#1a3a6b"/>
+  <text x="1000" y="32" text-anchor="middle" font-family="Arial" font-size="17" font-weight="bold" fill="white">MCD COMPLET — HOSPI-INFO — Tous les parcours, relations et circuits</text>
+
+  <!-- ══ HOPITAL (centre haut) ══ -->
+  <rect x="750" y="500" width="280" height="380" rx="3" fill="#FFFACD" stroke="#888" stroke-width="2"/>
+  <rect x="750" y="500" width="280" height="24" rx="3" fill="#DAA520" stroke="#888" stroke-width="2"/>
+  <text x="890" y="516" text-anchor="middle" font-family="Arial" font-size="13" font-weight="bold">HOPITAL</text>
+  <line x1="750" y1="524" x2="1030" y2="524" stroke="#888" stroke-width="1"/>
+  <text x="758" y="538" font-family="Arial" font-size="10" fill="#880000" font-weight="bold">+ id_hopital : Entier (CP, auto)</text>
+  <line x1="750" y1="546" x2="1030" y2="546" stroke="#ccc" stroke-width="0.5"/>
+  <text x="758" y="560" font-family="Arial" font-size="10" fill="#333">  nom : Chaîne(200)</text>
+  <text x="758" y="574" font-family="Arial" font-size="10" fill="#333">  ville : Chaîne(100)</text>
+  <text x="758" y="588" font-family="Arial" font-size="10" fill="#333">  adresse : Chaîne(255)</text>
+  <text x="758" y="602" font-family="Arial" font-size="10" fill="#333">  telephone : Chaîne(20)</text>
+  <text x="758" y="616" font-family="Arial" font-size="10" fill="#333">  email : Email (UNIQUE)</text>
+  <text x="758" y="630" font-family="Arial" font-size="10" fill="#333">  mot_de_passe : Chaîne(200)</text>
+  <text x="758" y="644" font-family="Arial" font-size="10" fill="#009900" font-weight="bold">  latitude : Décimal (GPS auto)</text>
+  <text x="758" y="658" font-family="Arial" font-size="10" fill="#009900" font-weight="bold">  longitude : Décimal (GPS auto)</text>
+  <text x="758" y="672" font-family="Arial" font-size="10" fill="#333">  lits_total : Entier</text>
+  <text x="758" y="686" font-family="Arial" font-size="10" fill="#333">  lits_disponibles : Entier</text>
+  <text x="758" y="700" font-family="Arial" font-size="10" fill="#333">  date_creation : DateHeure</text>
+  <text x="758" y="714" font-family="Arial" font-size="10" fill="#333">  date_modification : DateHeure</text>
+  <line x1="750" y1="722" x2="1030" y2="722" stroke="#DAA520" stroke-width="1" stroke-dasharray="4 2"/>
+  <text x="758" y="736" font-family="Arial" font-size="10" fill="#0066cc">  taux_occupation() → Décimal</text>
+  <text x="758" y="750" font-family="Arial" font-size="10" fill="#0066cc">  mettreAJourLits(n) → void</text>
+  <text x="758" y="764" font-family="Arial" font-size="10" fill="#0066cc">  seConnecter(email,mdp) → Bool</text>
+  <text x="758" y="778" font-family="Arial" font-size="10" fill="#0066cc">  recevoirEmailRDV() → void</text>
+  <text x="758" y="792" font-family="Arial" font-size="10" fill="#0066cc">  appelPatient(tel) → void</text>
+  <text x="758" y="806" font-family="Arial" font-size="10" fill="#0066cc">  apparaitreCarteLeaflet() → void</text>
+  <text x="758" y="820" font-family="Arial" font-size="10" fill="#0066cc">  getStatistiques() → Objet</text>
+
+  <!-- ══ SERVICE (haut gauche) ══ -->
+  <rect x="80" y="80" width="230" height="280" rx="3" fill="#FFFACD" stroke="#888" stroke-width="2"/>
+  <rect x="80" y="80" width="230" height="24" rx="3" fill="#DAA520" stroke="#888" stroke-width="2"/>
+  <text x="195" y="96" text-anchor="middle" font-family="Arial" font-size="13" font-weight="bold">SERVICE</text>
+  <line x1="80" y1="104" x2="310" y2="104" stroke="#888" stroke-width="1"/>
+  <text x="88" y="118" font-family="Arial" font-size="10" fill="#880000" font-weight="bold">+ id_service : Entier (CP)</text>
+  <text x="88" y="132" font-family="Arial" font-size="10" fill="#cc6600" font-weight="bold">  id_hopital : Entier (CE)</text>
+  <line x1="80" y1="140" x2="310" y2="140" stroke="#ccc" stroke-width="0.5"/>
+  <text x="88" y="154" font-family="Arial" font-size="10" fill="#333">  nom_service : Chaîne(100)</text>
+  <text x="88" y="168" font-family="Arial" font-size="10" fill="#333">  disponible : Booleen</text>
+  <text x="88" y="182" font-family="Arial" font-size="10" fill="#333">  horaires : Chaîne(100)</text>
+  <text x="88" y="196" font-family="Arial" font-size="10" fill="#333">  date_mise_a_jour : DateHeure</text>
+  <line x1="80" y1="204" x2="310" y2="204" stroke="#DAA520" stroke-width="1" stroke-dasharray="4 2"/>
+  <text x="88" y="218" font-family="Arial" font-size="10" fill="#0066cc">  basculer() → void</text>
+  <text x="88" y="232" font-family="Arial" font-size="10" fill="#0066cc">  activer() → void</text>
+  <text x="88" y="246" font-family="Arial" font-size="10" fill="#0066cc">  desactiver() → void</text>
+  <text x="88" y="260" font-family="Arial" font-size="10" fill="#0066cc">  getMedecinsDisponibles() → Liste</text>
+  <text x="88" y="274" font-family="Arial" font-size="10" fill="#0066cc">  getRendezVous() → Liste</text>
+  <text x="88" y="288" font-family="Arial" font-size="10" fill="#0066cc">  filtrerParCategorie() → Liste</text>
+  <text x="88" y="302" font-family="Arial" font-size="10" fill="#0066cc">  afficherSurFiche() → void</text>
+  <text x="88" y="316" font-family="Arial" font-size="10" fill="#0066cc">  toggleDisponibilite() → void</text>
+
+  <!-- ══ MEDECIN (haut droite) ══ -->
+  <rect x="1350" y="80" width="270" height="380" rx="3" fill="#FFFACD" stroke="#888" stroke-width="2"/>
+  <rect x="1350" y="80" width="270" height="24" rx="3" fill="#DAA520" stroke="#888" stroke-width="2"/>
+  <text x="1485" y="96" text-anchor="middle" font-family="Arial" font-size="13" font-weight="bold">MEDECIN</text>
+  <line x1="1350" y1="104" x2="1620" y2="104" stroke="#888" stroke-width="1"/>
+  <text x="1358" y="118" font-family="Arial" font-size="10" fill="#880000" font-weight="bold">+ id_medecin : Entier (CP)</text>
+  <text x="1358" y="132" font-family="Arial" font-size="10" fill="#cc6600" font-weight="bold">  id_hopital : Entier (CE → HOPITAL)</text>
+  <text x="1358" y="146" font-family="Arial" font-size="10" fill="#cc6600" font-weight="bold">  id_service : Entier (CE → SERVICE)</text>
+  <line x1="1350" y1="154" x2="1620" y2="154" stroke="#ccc" stroke-width="0.5"/>
+  <text x="1358" y="168" font-family="Arial" font-size="10" fill="#333">  nom : Chaîne(200)</text>
+  <text x="1358" y="182" font-family="Arial" font-size="10" fill="#333">  specialite : Chaîne(200)</text>
+  <text x="1358" y="196" font-family="Arial" font-size="10" fill="#333">  telephone : Chaîne(20) ← connexion</text>
+  <text x="1358" y="210" font-family="Arial" font-size="10" fill="#333">  disponible : Booleen</text>
+  <text x="1358" y="224" font-family="Arial" font-size="10" fill="#333">  heure_debut : Heure</text>
+  <text x="1358" y="238" font-family="Arial" font-size="10" fill="#333">  heure_fin : Heure</text>
+  <text x="1358" y="252" font-family="Arial" font-size="10" fill="#333">  jours_travail : Chaîne</text>
+  <text x="1358" y="266" font-family="Arial" font-size="10" fill="#333">  date_modification : DateHeure</text>
+  <line x1="1350" y1="274" x2="1620" y2="274" stroke="#DAA520" stroke-width="1" stroke-dasharray="4 2"/>
+  <text x="1358" y="288" font-family="Arial" font-size="10" fill="#0066cc">  seConnecter(tel) → Booleen</text>
+  <text x="1358" y="302" font-family="Arial" font-size="10" fill="#0066cc">  toggleDisponibilite() → void</text>
+  <text x="1358" y="316" font-family="Arial" font-size="10" fill="#0066cc">  modifierHoraires(deb,fin) → void</text>
+  <text x="1358" y="330" font-family="Arial" font-size="10" fill="#0066cc">  fixerHeureRDV(id,heure) → void</text>
+  <text x="1358" y="344" font-family="Arial" font-size="10" fill="#0066cc">  confirmerRDV(id) → void</text>
+  <text x="1358" y="358" font-family="Arial" font-size="10" fill="#0066cc">  annulerRDV(id) → void</text>
+  <text x="1358" y="372" font-family="Arial" font-size="10" fill="#0066cc">  voirDemandesRDV() → Liste</text>
+  <text x="1358" y="386" font-family="Arial" font-size="10" fill="#0066cc">  afficherDispoTempsReel() → void</text>
+  <text x="1358" y="400" font-family="Arial" font-size="10" fill="#0066cc">  seDeconnecter() → void</text>
+  <text x="1358" y="414" font-family="Arial" font-size="10" fill="#0066cc">  modifierJoursTravail() → void</text>
+  <text x="1358" y="428" font-family="Arial" font-size="10" fill="#0066cc">  appelHopital() → void</text>
+  <text x="1358" y="442" font-family="Arial" font-size="10" fill="#0066cc">  getInfosCompletes() → Objet</text>
+
+  <!-- ══ SUPER_ADMIN (haut centre) ══ -->
+  <rect x="750" y="80" width="260" height="320" rx="3" fill="#FFFACD" stroke="#888" stroke-width="2"/>
+  <rect x="750" y="80" width="260" height="24" rx="3" fill="#DAA520" stroke="#888" stroke-width="2"/>
+  <text x="880" y="96" text-anchor="middle" font-family="Arial" font-size="13" font-weight="bold">SUPER_ADMIN</text>
+  <line x1="750" y1="104" x2="1010" y2="104" stroke="#888" stroke-width="1"/>
+  <text x="758" y="118" font-family="Arial" font-size="10" fill="#880000" font-weight="bold">+ id_admin : Entier (CP)</text>
+  <line x1="750" y1="126" x2="1010" y2="126" stroke="#ccc" stroke-width="0.5"/>
+  <text x="758" y="140" font-family="Arial" font-size="10" fill="#333">  code_acces : superadmin2026</text>
+  <text x="758" y="154" font-family="Arial" font-size="10" fill="#333">  lien_acces : /super-admin</text>
+  <text x="758" y="168" font-family="Arial" font-size="10" fill="#333">  date_connexion : DateHeure</text>
+  <line x1="750" y1="176" x2="1010" y2="176" stroke="#DAA520" stroke-width="1" stroke-dasharray="4 2"/>
+  <text x="758" y="190" font-family="Arial" font-size="10" fill="#0066cc">  seConnecter(code) → Booleen</text>
+  <text x="758" y="204" font-family="Arial" font-size="10" fill="#0066cc">  listerDemandes() → Liste</text>
+  <text x="758" y="218" font-family="Arial" font-size="10" fill="#0066cc">  approuverDemande(id) → HOPITAL</text>
+  <text x="758" y="232" font-family="Arial" font-size="10" fill="#0066cc">  rejeterDemande(id) → void</text>
+  <text x="758" y="246" font-family="Arial" font-size="10" fill="#0066cc">  modifierHopital(id,data) → void</text>
+  <text x="758" y="260" font-family="Arial" font-size="10" fill="#0066cc">  supprimerHopital(id) → void</text>
+  <text x="758" y="274" font-family="Arial" font-size="10" fill="#0066cc">  voirStatistiques() → Objet</text>
+  <text x="758" y="288" font-family="Arial" font-size="10" fill="#0066cc">  envoyerEmailConfirmation() → void</text>
+  <text x="758" y="302" font-family="Arial" font-size="10" fill="#0066cc">  gererTousHopitaux() → Liste</text>
+  <text x="758" y="316" font-family="Arial" font-size="10" fill="#0066cc">  voirDemandesEnAttente() → Liste</text>
+  <text x="758" y="330" font-family="Arial" font-size="10" fill="#0066cc">  genererRapport() → Objet</text>
+  <text x="758" y="344" font-family="Arial" font-size="10" fill="#0066cc">  seDeconnecter() → void</text>
+  <text x="758" y="358" font-family="Arial" font-size="10" fill="#0066cc">  validerInscription() → void</text>
+  <text x="758" y="372" font-family="Arial" font-size="10" fill="#0066cc">  rejeterInscription() → void</text>
+  <text x="758" y="386" font-family="Arial" font-size="10" fill="#0066cc">  envoyerEmailRejet() → void</text>
+
+  <!-- ══ RENDEZ_VOUS (centre bas) ══ -->
+  <rect x="700" y="1180" width="290" height="440" rx="3" fill="#FFFACD" stroke="#888" stroke-width="2"/>
+  <rect x="700" y="1180" width="290" height="24" rx="3" fill="#DAA520" stroke="#888" stroke-width="2"/>
+  <text x="845" y="1196" text-anchor="middle" font-family="Arial" font-size="13" font-weight="bold">RENDEZ_VOUS</text>
+  <line x1="700" y1="1204" x2="990" y2="1204" stroke="#888" stroke-width="1"/>
+  <text x="708" y="1218" font-family="Arial" font-size="10" fill="#880000" font-weight="bold">+ id_rdv : Entier (CP, auto)</text>
+  <text x="708" y="1232" font-family="Arial" font-size="10" fill="#cc6600" font-weight="bold">  id_hopital : Entier (CE → HOPITAL)</text>
+  <text x="708" y="1246" font-family="Arial" font-size="10" fill="#cc6600" font-weight="bold">  id_medecin : Entier (CE → MEDECIN)</text>
+  <text x="708" y="1260" font-family="Arial" font-size="10" fill="#cc6600" font-weight="bold">  id_service : Entier (CE → SERVICE)</text>
+  <line x1="700" y1="1268" x2="990" y2="1268" stroke="#ccc" stroke-width="0.5"/>
+  <text x="708" y="1282" font-family="Arial" font-size="10" fill="#333">  nom_patient : Chaîne(200)</text>
+  <text x="708" y="1296" font-family="Arial" font-size="10" fill="#333">  telephone_patient : Chaîne(20)</text>
+  <text x="708" y="1310" font-family="Arial" font-size="10" fill="#333">  motif : Texte</text>
+  <text x="708" y="1324" font-family="Arial" font-size="10" fill="#333">  date_souhaitee : Date</text>
+  <text x="708" y="1338" font-family="Arial" font-size="10" fill="#333" font-weight="bold">  heure_fixee : Heure (par médecin)</text>
+  <text x="708" y="1352" font-family="Arial" font-size="10" fill="#333">  statut : Enum</text>
+  <text x="708" y="1366" font-family="Arial" font-size="10" fill="#555">    [en_attente|confirme|annule|termine]</text>
+  <text x="708" y="1380" font-family="Arial" font-size="10" fill="#333">  numero_rdv : Chaîne (U) RDV-XXXXXX</text>
+  <text x="708" y="1394" font-family="Arial" font-size="10" fill="#333">  date_creation : DateHeure (auto)</text>
+  <line x1="700" y1="1402" x2="990" y2="1402" stroke="#DAA520" stroke-width="1" stroke-dasharray="4 2"/>
+  <text x="708" y="1416" font-family="Arial" font-size="10" fill="#0066cc">  genererNumeroRDV() → Chaîne</text>
+  <text x="708" y="1430" font-family="Arial" font-size="10" fill="#0066cc">  confirmer(heure) → void</text>
+  <text x="708" y="1444" font-family="Arial" font-size="10" fill="#0066cc">  annuler() → void</text>
+  <text x="708" y="1458" font-family="Arial" font-size="10" fill="#0066cc">  envoyerEmailDirecteur() → void</text>
+  <text x="708" y="1472" font-family="Arial" font-size="10" fill="#0066cc">  rechercherParTel(tel) → Liste</text>
+  <text x="708" y="1486" font-family="Arial" font-size="10" fill="#0066cc">  appelPatient() → void</text>
+  <text x="708" y="1500" font-family="Arial" font-size="10" fill="#0066cc">  appelHopital() → void</text>
+  <text x="708" y="1514" font-family="Arial" font-size="10" fill="#0066cc">  afficherHeureConfirmee() → void</text>
+  <text x="708" y="1528" font-family="Arial" font-size="10" fill="#0066cc">  afficherStatut() → Chaîne</text>
+  <text x="708" y="1542" font-family="Arial" font-size="10" fill="#0066cc">  notifierPatient() → void</text>
+  <text x="708" y="1556" font-family="Arial" font-size="10" fill="#0066cc">  terminer() → void</text>
+  <text x="708" y="1570" font-family="Arial" font-size="10" fill="#0066cc">  getDetails() → Objet</text>
+  <text x="708" y="1584" font-family="Arial" font-size="10" fill="#0066cc">  suivreRDV(tel) → Liste</text>
+  <text x="708" y="1598" font-family="Arial" font-size="10" fill="#0066cc">  declencherNotification() → void</text>
+
+  <!-- ══ DEMANDE_INSCRIPTION (gauche bas) ══ -->
+  <rect x="80" y="820" width="270" height="460" rx="3" fill="#FFFACD" stroke="#888" stroke-width="2"/>
+  <rect x="80" y="820" width="270" height="24" rx="3" fill="#DAA520" stroke="#888" stroke-width="2"/>
+  <text x="215" y="836" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold">DEMANDE_INSCRIPTION</text>
+  <line x1="80" y1="844" x2="350" y2="844" stroke="#888" stroke-width="1"/>
+  <text x="88" y="858" font-family="Arial" font-size="10" fill="#880000" font-weight="bold">+ id_demande : Entier (CP)</text>
+  <line x1="80" y1="866" x2="350" y2="866" stroke="#ccc" stroke-width="0.5"/>
+  <text x="88" y="880" font-family="Arial" font-size="10" fill="#333">  nom_hopital : Chaîne(200)</text>
+  <text x="88" y="894" font-family="Arial" font-size="10" fill="#333">  ville : Chaîne(100)</text>
+  <text x="88" y="908" font-family="Arial" font-size="10" fill="#333">  adresse : Chaîne(255)</text>
+  <text x="88" y="922" font-family="Arial" font-size="10" fill="#333">  telephone : Chaîne(20)</text>
+  <text x="88" y="936" font-family="Arial" font-size="10" fill="#333">  email : Email</text>
+  <text x="88" y="950" font-family="Arial" font-size="10" fill="#333">  mot_de_passe : Chaîne(200)</text>
+  <text x="88" y="964" font-family="Arial" font-size="10" fill="#009900" font-weight="bold">  latitude : Décimal (GPS auto)</text>
+  <text x="88" y="978" font-family="Arial" font-size="10" fill="#009900" font-weight="bold">  longitude : Décimal (GPS auto)</text>
+  <text x="88" y="992" font-family="Arial" font-size="10" fill="#333">  nb_lits_total : Entier</text>
+  <text x="88" y="1006" font-family="Arial" font-size="10" fill="#333">  services : JSON</text>
+  <text x="88" y="1020" font-family="Arial" font-size="10" fill="#333">  nom_responsable : Chaîne(200)</text>
+  <text x="88" y="1034" font-family="Arial" font-size="10" fill="#333">  statut : Enum</text>
+  <text x="88" y="1048" font-family="Arial" font-size="10" fill="#555">    [en_attente|approuve|rejete]</text>
+  <text x="88" y="1062" font-family="Arial" font-size="10" fill="#333">  date_soumission : DateHeure</text>
+  <line x1="80" y1="1070" x2="350" y2="1070" stroke="#DAA520" stroke-width="1" stroke-dasharray="4 2"/>
+  <text x="88" y="1084" font-family="Arial" font-size="10" fill="#0066cc">  soumettre() → void</text>
+  <text x="88" y="1098" font-family="Arial" font-size="10" fill="#0066cc">  approuver() → HOPITAL</text>
+  <text x="88" y="1112" font-family="Arial" font-size="10" fill="#0066cc">  rejeter() → void</text>
+  <text x="88" y="1126" font-family="Arial" font-size="10" fill="#0066cc">  creerHopital() → HOPITAL</text>
+  <text x="88" y="1140" font-family="Arial" font-size="10" fill="#0066cc">  creerServices(hop) → Liste</text>
+  <text x="88" y="1154" font-family="Arial" font-size="10" fill="#0066cc">  notifierAdmin() → void</text>
+  <text x="88" y="1168" font-family="Arial" font-size="10" fill="#0066cc">  envoyerEmailConfirmation() → void</text>
+  <text x="88" y="1182" font-family="Arial" font-size="10" fill="#0066cc">  envoyerEmailRejet() → void</text>
+  <text x="88" y="1196" font-family="Arial" font-size="10" fill="#0066cc">  detecterGPS() → void</text>
+  <text x="88" y="1210" font-family="Arial" font-size="10" fill="#0066cc">  placerSurCarte() → void</text>
+  <text x="88" y="1224" font-family="Arial" font-size="10" fill="#0066cc">  validerFormulaire() → Bool</text>
+  <text x="88" y="1238" font-family="Arial" font-size="10" fill="#0066cc">  getStatut() → Chaîne</text>
+  <text x="88" y="1252" font-family="Arial" font-size="10" fill="#0066cc">  remplirEnUnePage() → void</text>
+
+  <!-- ══ SESSION_CONNEXION (droite haut) ══ -->
+  <rect x="1650" y="500" width="270" height="300" rx="3" fill="#FFFACD" stroke="#888" stroke-width="2"/>
+  <rect x="1650" y="500" width="270" height="24" rx="3" fill="#DAA520" stroke="#888" stroke-width="2"/>
+  <text x="1785" y="516" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold">SESSION_CONNEXION</text>
+  <line x1="1650" y1="524" x2="1920" y2="524" stroke="#888" stroke-width="1"/>
+  <text x="1658" y="538" font-family="Arial" font-size="10" fill="#880000" font-weight="bold">+ id_session : Entier (CP)</text>
+  <text x="1658" y="552" font-family="Arial" font-size="10" fill="#cc6600" font-weight="bold">  id_hopital : Entier (CE, null)</text>
+  <text x="1658" y="566" font-family="Arial" font-size="10" fill="#cc6600" font-weight="bold">  id_medecin : Entier (CE, null)</text>
+  <line x1="1650" y1="574" x2="1920" y2="574" stroke="#ccc" stroke-width="0.5"/>
+  <text x="1658" y="588" font-family="Arial" font-size="10" fill="#333">  type_utilisateur : Enum</text>
+  <text x="1658" y="602" font-family="Arial" font-size="10" fill="#555">    [directeur|medecin|admin]</text>
+  <text x="1658" y="616" font-family="Arial" font-size="10" fill="#333">  identifiant : Chaîne (email/tel)</text>
+  <text x="1658" y="630" font-family="Arial" font-size="10" fill="#333">  token : Chaîne (localStorage)</text>
+  <text x="1658" y="644" font-family="Arial" font-size="10" fill="#333">  date_connexion : DateHeure</text>
+  <text x="1658" y="658" font-family="Arial" font-size="10" fill="#333">  lien_acces : /connexion</text>
+  <line x1="1650" y1="666" x2="1920" y2="666" stroke="#DAA520" stroke-width="1" stroke-dasharray="4 2"/>
+  <text x="1658" y="680" font-family="Arial" font-size="10" fill="#0066cc">  detecterTypeUtilisateur() → Enum</text>
+  <text x="1658" y="694" font-family="Arial" font-size="10" fill="#0066cc">  redirigerDashboard() → void</text>
+  <text x="1658" y="708" font-family="Arial" font-size="10" fill="#0066cc">  seDeconnecter() → void</text>
+  <text x="1658" y="722" font-family="Arial" font-size="10" fill="#0066cc">  estValide() → Booleen</text>
+  <text x="1658" y="736" font-family="Arial" font-size="10" fill="#0066cc">  sauvegarderLocalStorage() → void</text>
+  <text x="1658" y="750" font-family="Arial" font-size="10" fill="#0066cc">  verifierMDP(mdp) → Booleen</text>
+  <text x="1658" y="764" font-family="Arial" font-size="10" fill="#0066cc">  verifierTelephone(tel) → Booleen</text>
+  <text x="1658" y="778" font-family="Arial" font-size="10" fill="#0066cc">  afficherChampMDP() → void</text>
+
+  <!-- ══ NOTIFICATION_EMAIL (droite bas) ══ -->
+  <rect x="1350" y="1180" width="270" height="340" rx="3" fill="#FFFACD" stroke="#888" stroke-width="2"/>
+  <rect x="1350" y="1180" width="270" height="24" rx="3" fill="#DAA520" stroke="#888" stroke-width="2"/>
+  <text x="1485" y="1196" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold">NOTIFICATION_EMAIL</text>
+  <line x1="1350" y1="1204" x2="1620" y2="1204" stroke="#888" stroke-width="1"/>
+  <text x="1358" y="1218" font-family="Arial" font-size="10" fill="#880000" font-weight="bold">+ id_notif : Entier (CP)</text>
+  <text x="1358" y="1232" font-family="Arial" font-size="10" fill="#cc6600" font-weight="bold">  id_rdv : Entier (CE → RDV, null)</text>
+  <text x="1358" y="1246" font-family="Arial" font-size="10" fill="#cc6600" font-weight="bold">  id_demande : Entier (CE, null)</text>
+  <line x1="1350" y1="1254" x2="1620" y2="1254" stroke="#ccc" stroke-width="0.5"/>
+  <text x="1358" y="1268" font-family="Arial" font-size="10" fill="#333">  email_destinataire : Email</text>
+  <text x="1358" y="1282" font-family="Arial" font-size="10" fill="#333">  objet : Chaîne</text>
+  <text x="1358" y="1296" font-family="Arial" font-size="10" fill="#333">  contenu : Texte</text>
+  <text x="1358" y="1310" font-family="Arial" font-size="10" fill="#333">  type_notif : Enum</text>
+  <text x="1358" y="1324" font-family="Arial" font-size="10" fill="#555">    [rdv_nouveau|rdv_confirme</text>
+  <text x="1358" y="1338" font-family="Arial" font-size="10" fill="#555">     rdv_annule|inscription</text>
+  <text x="1358" y="1352" font-family="Arial" font-size="10" fill="#555">     approbation|rejet]</text>
+  <text x="1358" y="1366" font-family="Arial" font-size="10" fill="#333">  date_envoi : DateHeure</text>
+  <text x="1358" y="1380" font-family="Arial" font-size="10" fill="#333">  statut : Enum [ok|echec]</text>
+  <line x1="1350" y1="1388" x2="1620" y2="1388" stroke="#DAA520" stroke-width="1" stroke-dasharray="4 2"/>
+  <text x="1358" y="1402" font-family="Arial" font-size="10" fill="#0066cc">  envoyer() → Booleen (SMTP)</text>
+  <text x="1358" y="1416" font-family="Arial" font-size="10" fill="#0066cc">  genererContenu() → Chaîne</text>
+  <text x="1358" y="1430" font-family="Arial" font-size="10" fill="#0066cc">  notifierDirecteurRDV() → void</text>
+  <text x="1358" y="1444" font-family="Arial" font-size="10" fill="#0066cc">  notifierAdminInscription() → void</text>
+  <text x="1358" y="1458" font-family="Arial" font-size="10" fill="#0066cc">  notifierApprobation() → void</text>
+  <text x="1358" y="1472" font-family="Arial" font-size="10" fill="#0066cc">  notifierRejet() → void</text>
+  <text x="1358" y="1486" font-family="Arial" font-size="10" fill="#0066cc">  relancerEnvoi() → void</text>
+  <text x="1358" y="1500" font-family="Arial" font-size="10" fill="#0066cc">  verifierStatutEnvoi() → void</text>
+
+  <!-- ══ PATIENT (bas centre droite) ══ -->
+  <rect x="200" y="1760" width="260" height="380" rx="3" fill="#FFFACD" stroke="#888" stroke-width="2"/>
+  <rect x="200" y="1760" width="260" height="24" rx="3" fill="#DAA520" stroke="#888" stroke-width="2"/>
+  <text x="330" y="1776" text-anchor="middle" font-family="Arial" font-size="13" font-weight="bold">PATIENT</text>
+  <line x1="200" y1="1784" x2="460" y2="1784" stroke="#888" stroke-width="1"/>
+  <text x="208" y="1798" font-family="Arial" font-size="10" fill="#333">  (pas d'inscription requise)</text>
+  <text x="208" y="1812" font-family="Arial" font-size="10" fill="#333">  nom_patient : Chaîne (saisi au RDV)</text>
+  <text x="208" y="1826" font-family="Arial" font-size="10" fill="#333">  telephone : Chaîne (clé suivi RDV)</text>
+  <line x1="200" y1="1834" x2="460" y2="1834" stroke="#DAA520" stroke-width="1" stroke-dasharray="4 2"/>
+  <text x="208" y="1848" font-family="Arial" font-size="10" fill="#0066cc">  consulterHopitaux() → Liste</text>
+  <text x="208" y="1862" font-family="Arial" font-size="10" fill="#0066cc">  voirCarteLeaflet() → void</text>
+  <text x="208" y="1876" font-family="Arial" font-size="10" fill="#0066cc">  geolocalisationGPS() → Position</text>
+  <text x="208" y="1890" font-family="Arial" font-size="10" fill="#0066cc">  hopitalLePlusProche() → HOPITAL</text>
+  <text x="208" y="1904" font-family="Arial" font-size="10" fill="#0066cc">  filtrerParService(s) → Liste</text>
+  <text x="208" y="1918" font-family="Arial" font-size="10" fill="#0066cc">  voirMedecinsDisponibles() → Liste</text>
+  <text x="208" y="1932" font-family="Arial" font-size="10" fill="#0066cc">  prendreRDV(hopId) → RDV</text>
+  <text x="208" y="1946" font-family="Arial" font-size="10" fill="#0066cc">  suivreRDV(tel) → Liste</text>
+  <text x="208" y="1960" font-family="Arial" font-size="10" fill="#0066cc">  voirHeureConfirmee() → Heure</text>
+  <text x="208" y="1974" font-family="Arial" font-size="10" fill="#0066cc">  appelHopital(tel) → void</text>
+  <text x="208" y="1988" font-family="Arial" font-size="10" fill="#0066cc">  utiliserChatbot() → void</text>
+  <text x="208" y="2002" font-family="Arial" font-size="10" fill="#0066cc">  voirStatistiques() → void</text>
+  <text x="208" y="2016" font-family="Arial" font-size="10" fill="#0066cc">  installerPWA() → void</text>
+  <text x="208" y="2030" font-family="Arial" font-size="10" fill="#0066cc">  obtenirItineraire() → URL</text>
+  <text x="208" y="2044" font-family="Arial" font-size="10" fill="#0066cc">  voirTauxOccupation() → void</text>
+  <text x="208" y="2058" font-family="Arial" font-size="10" fill="#0066cc">  partagerHopital() → void</text>
+  <text x="208" y="2072" font-family="Arial" font-size="10" fill="#0066cc">  rafraichirDonnees() → void</text>
+
+  <!-- ══ CARTE_INTERACTIVE (bas gauche) ══ -->
+  <rect x="700" y="1760" width="250" height="280" rx="3" fill="#FFFACD" stroke="#888" stroke-width="2"/>
+  <rect x="700" y="1760" width="250" height="24" rx="3" fill="#DAA520" stroke="#888" stroke-width="2"/>
+  <text x="825" y="1776" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold">CARTE_INTERACTIVE</text>
+  <line x1="700" y1="1784" x2="950" y2="1784" stroke="#888" stroke-width="1"/>
+  <text x="708" y="1798" font-family="Arial" font-size="10" fill="#880000" font-weight="bold">+ id_carte : Entier (CP)</text>
+  <line x1="700" y1="1806" x2="950" y2="1806" stroke="#ccc" stroke-width="0.5"/>
+  <text x="708" y="1820" font-family="Arial" font-size="10" fill="#333">  technologie : Leaflet.js</text>
+  <text x="708" y="1834" font-family="Arial" font-size="10" fill="#009900">  position_utilisateur : GPS</text>
+  <text x="708" y="1848" font-family="Arial" font-size="10" fill="#333">  zoom : Entier</text>
+  <text x="708" y="1862" font-family="Arial" font-size="10" fill="#333">  marqueurs : Liste</text>
+  <line x1="700" y1="1870" x2="950" y2="1870" stroke="#DAA520" stroke-width="1" stroke-dasharray="4 2"/>
+  <text x="708" y="1884" font-family="Arial" font-size="10" fill="#0066cc">  afficherHopitaux() → void</text>
+  <text x="708" y="1898" font-family="Arial" font-size="10" fill="#0066cc">  detecterPosition() → GPS</text>
+  <text x="708" y="1912" font-family="Arial" font-size="10" fill="#0066cc">  calculerDistance(pos) → Float</text>
+  <text x="708" y="1926" font-family="Arial" font-size="10" fill="#0066cc">  afficherPlusProche() → HOPITAL</text>
+  <text x="708" y="1940" font-family="Arial" font-size="10" fill="#0066cc">  colorierMarqueur(dispo) → void</text>
+  <text x="708" y="1954" font-family="Arial" font-size="10" fill="#0066cc">  toggleVueListeCarte() → void</text>
+  <text x="708" y="1968" font-family="Arial" font-size="10" fill="#0066cc">  filtrerMarqueurs(cat) → void</text>
+  <text x="708" y="1982" font-family="Arial" font-size="10" fill="#0066cc">  ouvrirItineraire() → URL</text>
+  <text x="708" y="1996" font-family="Arial" font-size="10" fill="#0066cc">  rafraichir30sec() → void</text>
+  <text x="708" y="2010" font-family="Arial" font-size="10" fill="#0066cc">  zoomSurHopital() → void</text>
+
+  <!-- ════════ ASSOCIATIONS ════════ -->
+  <ellipse cx="420" cy="370" rx="62" ry="26" fill="#B0E0FF" stroke="#4A90D9" stroke-width="1.5"/>
+  <text x="420" y="370" text-anchor="middle" font-family="Arial" font-size="11" font-weight="bold" fill="#003366" dominant-baseline="central">possède</text>
+
+  <ellipse cx="1200" cy="370" rx="62" ry="26" fill="#B0E0FF" stroke="#4A90D9" stroke-width="1.5"/>
+  <text x="1200" y="370" text-anchor="middle" font-family="Arial" font-size="11" font-weight="bold" fill="#003366" dominant-baseline="central">emploie</text>
+
+  <ellipse cx="845" cy="1080" rx="62" ry="26" fill="#B0E0FF" stroke="#4A90D9" stroke-width="1.5"/>
+  <text x="845" y="1080" text-anchor="middle" font-family="Arial" font-size="11" font-weight="bold" fill="#003366" dominant-baseline="central">reçoit</text>
+
+  <ellipse cx="700" cy="200" rx="62" ry="26" fill="#B0E0FF" stroke="#4A90D9" stroke-width="1.5"/>
+  <text x="700" y="200" text-anchor="middle" font-family="Arial" font-size="11" font-weight="bold" fill="#003366" dominant-baseline="central">affecte</text>
+
+  <ellipse cx="420" cy="960" rx="62" ry="26" fill="#B0E0FF" stroke="#4A90D9" stroke-width="1.5"/>
+  <text x="420" y="960" text-anchor="middle" font-family="Arial" font-size="11" font-weight="bold" fill="#003366" dominant-baseline="central">concerne</text>
+
+  <ellipse cx="1200" cy="960" rx="62" ry="26" fill="#B0E0FF" stroke="#4A90D9" stroke-width="1.5"/>
+  <text x="1200" y="960" text-anchor="middle" font-family="Arial" font-size="11" font-weight="bold" fill="#003366" dominant-baseline="central">traite</text>
+
+  <ellipse cx="530" cy="760" rx="62" ry="26" fill="#B0E0FF" stroke="#4A90D9" stroke-width="1.5"/>
+  <text x="530" y="760" text-anchor="middle" font-family="Arial" font-size="11" font-weight="bold" fill="#003366" dominant-baseline="central">crée</text>
+
+  <ellipse cx="845" cy="430" rx="62" ry="26" fill="#B0E0FF" stroke="#4A90D9" stroke-width="1.5"/>
+  <text x="845" y="430" text-anchor="middle" font-family="Arial" font-size="11" font-weight="bold" fill="#003366" dominant-baseline="central">gère</text>
+
+  <ellipse cx="1280" cy="730" rx="62" ry="26" fill="#B0E0FF" stroke="#4A90D9" stroke-width="1.5"/>
+  <text x="1280" y="730" text-anchor="middle" font-family="Arial" font-size="11" font-weight="bold" fill="#003366" dominant-baseline="central">utilise</text>
+
+  <ellipse cx="1200" cy="1080" rx="62" ry="26" fill="#B0E0FF" stroke="#4A90D9" stroke-width="1.5"/>
+  <text x="1200" y="1080" text-anchor="middle" font-family="Arial" font-size="11" font-weight="bold" fill="#003366" dominant-baseline="central">déclenche</text>
+
+  <ellipse cx="580" cy="1680" rx="62" ry="26" fill="#B0E0FF" stroke="#4A90D9" stroke-width="1.5"/>
+  <text x="580" y="1680" text-anchor="middle" font-family="Arial" font-size="11" font-weight="bold" fill="#003366" dominant-baseline="central">soumet</text>
+
+  <ellipse cx="580" cy="1900" rx="62" ry="26" fill="#B0E0FF" stroke="#4A90D9" stroke-width="1.5"/>
+  <text x="580" y="1900" text-anchor="middle" font-family="Arial" font-size="11" font-weight="bold" fill="#003366" dominant-baseline="central">visualise</text>
+
+  <ellipse cx="845" cy="1680" rx="62" ry="26" fill="#B0E0FF" stroke="#4A90D9" stroke-width="1.5"/>
+  <text x="845" y="1680" text-anchor="middle" font-family="Arial" font-size="11" font-weight="bold" fill="#003366" dominant-baseline="central">affiche</text>
+
+  <!-- ════════ LIGNES ════════ -->
+  <!-- HOPITAL → possède → SERVICE -->
+  <line x1="750" y1="650" x2="482" y2="370" stroke="#444" stroke-width="1.2"/>
+  <line x1="358" y1="370" x2="195" y2="330" stroke="#444" stroke-width="1.2"/>
+  <text x="560" y="500" font-family="Arial" font-size="12" font-weight="bold" fill="#cc0000">1,1</text>
+  <text x="198" y="355" font-family="Arial" font-size="12" font-weight="bold" fill="#cc0000">0,n</text>
+
+  <!-- HOPITAL → emploie → MEDECIN -->
+  <line x1="1030" y1="650" x2="1138" y2="370" stroke="#444" stroke-width="1.2"/>
+  <line x1="1262" y1="370" x2="1400" y2="248" stroke="#444" stroke-width="1.2"/>
+  <text x="1060" y="500" font-family="Arial" font-size="12" font-weight="bold" fill="#cc0000">1,1</text>
+  <text x="1380" y="310" font-family="Arial" font-size="12" font-weight="bold" fill="#cc0000">0,n</text>
+
+  <!-- HOPITAL → reçoit → RDV -->
+  <line x1="845" y1="880" x2="845" y2="1054" stroke="#444" stroke-width="1.2"/>
+  <line x1="845" y1="1106" x2="845" y2="1180" stroke="#444" stroke-width="1.2"/>
+  <text x="855" y="970" font-family="Arial" font-size="12" font-weight="bold" fill="#cc0000">1,1</text>
+  <text x="855" y="1160" font-family="Arial" font-size="12" font-weight="bold" fill="#cc0000">0,n</text>
+
+  <!-- SERVICE → affecte → MEDECIN -->
+  <line x1="310" y1="200" x2="638" y2="200" stroke="#444" stroke-width="1.2"/>
+  <line x1="762" y1="200" x2="1350" y2="200" stroke="#444" stroke-width="1.2"/>
+  <text x="330" y="190" font-family="Arial" font-size="12" font-weight="bold" fill="#cc0000">0,1</text>
+  <text x="1310" y="190" font-family="Arial" font-size="12" font-weight="bold" fill="#cc0000">0,n</text>
+
+  <!-- SERVICE → concerne → RDV -->
+  <line x1="195" y1="360" x2="380" y2="934" stroke="#444" stroke-width="1.2"/>
+  <line x1="458" y1="986" x2="730" y2="1268" stroke="#444" stroke-width="1.2"/>
+  <text x="168" y="660" font-family="Arial" font-size="12" font-weight="bold" fill="#cc0000">0,1</text>
+  <text x="596" y="1130" font-family="Arial" font-size="12" font-weight="bold" fill="#cc0000">0,n</text>
+
+  <!-- MEDECIN → traite → RDV -->
+  <line x1="1400" y1="400" x2="1262" y2="934" stroke="#444" stroke-width="1.2"/>
+  <line x1="1138" y1="986" x2="990" y2="1268" stroke="#444" stroke-width="1.2"/>
+  <text x="1360" y="660" font-family="Arial" font-size="12" font-weight="bold" fill="#cc0000">0,1</text>
+  <text x="1060" y="1130" font-family="Arial" font-size="12" font-weight="bold" fill="#cc0000">0,n</text>
+
+  <!-- DEMANDE → crée → HOPITAL -->
+  <line x1="215" y1="820" x2="468" y2="786" stroke="#444" stroke-width="1.2"/>
+  <line x1="592" y1="748" x2="780" y2="700" stroke="#444" stroke-width="1.2"/>
+  <text x="280" y="800" font-family="Arial" font-size="12" font-weight="bold" fill="#cc0000">0,1</text>
+  <text x="700" y="720" font-family="Arial" font-size="12" font-weight="bold" fill="#cc0000">1,1</text>
+
+  <!-- ADMIN → gère → HOPITAL -->
+  <line x1="845" y1="400" x2="845" y2="404" stroke="#444" stroke-width="1.2"/>
+  <line x1="845" y1="456" x2="845" y2="500" stroke="#444" stroke-width="1.2"/>
+  <text x="855" y="480" font-family="Arial" font-size="12" font-weight="bold" fill="#cc0000">1,1</text>
+  <text x="855" y="420" font-family="Arial" font-size="12" font-weight="bold" fill="#cc0000">0,n</text>
+
+  <!-- HOPITAL → utilise → SESSION -->
+  <line x1="1030" y1="720" x2="1218" y2="730" stroke="#444" stroke-width="1.2"/>
+  <line x1="1342" y1="730" x2="1650" y2="660" stroke="#444" stroke-width="1.2"/>
+  <text x="1060" y="718" font-family="Arial" font-size="12" font-weight="bold" fill="#cc0000">1,1</text>
+  <text x="1608" y="668" font-family="Arial" font-size="12" font-weight="bold" fill="#cc0000">0,n</text>
+
+  <!-- RDV → déclenche → NOTIF -->
+  <line x1="990" y1="1350" x2="1138" y2="1080" stroke="#444" stroke-width="1.2"/>
+  <line x1="1262" y1="1080" x2="1420" y2="1230" stroke="#444" stroke-width="1.2"/>
+  <text x="1050" y="1210" font-family="Arial" font-size="12" font-weight="bold" fill="#cc0000">0,1</text>
+  <text x="1376" y="1170" font-family="Arial" font-size="12" font-weight="bold" fill="#cc0000">0,n</text>
+
+  <!-- PATIENT → soumet → RDV -->
+  <line x1="460" y1="1900" x2="518" y2="1680" stroke="#444" stroke-width="1.2"/>
+  <line x1="642" y1="1680" x2="760" y2="1620" stroke="#444" stroke-width="1.2"/>
+  <text x="466" y="1790" font-family="Arial" font-size="12" font-weight="bold" fill="#cc0000">0,n</text>
+  <text x="720" y="1650" font-family="Arial" font-size="12" font-weight="bold" fill="#cc0000">0,1</text>
+
+  <!-- PATIENT → visualise → CARTE -->
+  <line x1="460" y1="1950" x2="518" y2="1900" stroke="#444" stroke-width="1.2"/>
+  <line x1="642" y1="1900" x2="700" y2="1900" stroke="#444" stroke-width="1.2"/>
+  <text x="466" y="1928" font-family="Arial" font-size="12" font-weight="bold" fill="#cc0000">0,n</text>
+  <text x="660" y="1892" font-family="Arial" font-size="12" font-weight="bold" fill="#cc0000">1,1</text>
+
+  <!-- CARTE → affiche → HOPITAL -->
+  <line x1="825" y1="1760" x2="845" y2="1706" stroke="#444" stroke-width="1.2"/>
+  <line x1="845" y1="1654" x2="845" y2="1620" stroke="#444" stroke-width="1.2"/>
+  <text x="855" y="1685" font-family="Arial" font-size="12" font-weight="bold" fill="#cc0000">0,n</text>
+  <text x="855" y="1630" font-family="Arial" font-size="12" font-weight="bold" fill="#cc0000">1,1</text>
+
+  <!-- LÉGENDE -->
+  <rect x="10" y="2340" width="1980" height="50" rx="4" fill="white" stroke="#ccc" stroke-width="1"/>
+  <rect x="20" y="2356" width="16" height="14" fill="#FFFACD" stroke="#DAA520"/>
+  <text x="42" y="2367" font-family="Arial" font-size="11" fill="#333">Entité</text>
+  <ellipse cx="118" cy="2363" rx="18" ry="10" fill="#B0E0FF" stroke="#4A90D9"/>
+  <text x="142" y="2367" font-family="Arial" font-size="11" fill="#333">Association</text>
+  <text x="280" y="2367" font-family="Arial" font-size="11" fill="#cc0000" font-weight="bold">1,1 / 0,n</text>
+  <text x="380" y="2367" font-family="Arial" font-size="11" fill="#333">Cardinalités</text>
+  <text x="500" y="2367" font-family="Arial" font-size="11" fill="#cc6600" font-weight="bold">CE</text>
+  <text x="518" y="2367" font-family="Arial" font-size="11" fill="#333">= Clé Étrangère</text>
+  <text x="660" y="2367" font-family="Arial" font-size="11" fill="#880000" font-weight="bold">CP</text>
+  <text x="678" y="2367" font-family="Arial" font-size="11" fill="#333">= Clé Primaire</text>
+  <text x="820" y="2367" font-family="Arial" font-size="11" fill="#009900" font-weight="bold">GPS</text>
+  <text x="848" y="2367" font-family="Arial" font-size="11" fill="#333">= Géolocalisation auto</text>
+  <text x="1020" y="2367" font-family="Arial" font-size="11" fill="#0066cc" font-weight="bold">()</text>
+  <text x="1036" y="2367" font-family="Arial" font-size="11" fill="#333">= Méthode</text>
+  <text x="1160" y="2367" font-family="Arial" font-size="11" fill="#555" font-style="italic">Django ORM — SQLite — React.js 18 — Vercel — PythonAnywhere — PWA</text>
+
+  <!-- STATUTS -->
+  <rect x="10" y="2280" width="980" height="54" rx="4" fill="#f0f7ff" stroke="#4A90D9" stroke-width="1"/>
+  <text x="20" y="2298" font-family="Arial" font-size="10" fill="#003366" font-weight="bold">Valeurs ENUM :</text>
+  <text x="20" y="2314" font-family="Arial" font-size="10" fill="#333">statut_rdv : [en_attente | confirme | annule | termine]</text>
+  <text x="20" y="2330" font-family="Arial" font-size="10" fill="#333">statut_demande : [en_attente | approuve | rejete]  |  type_session : [directeur | medecin | admin]</text>
+  <rect x="1000" y="2280" width="990" height="54" rx="4" fill="#f0fff0" stroke="#4A90D9" stroke-width="1"/>
+  <text x="1010" y="2298" font-family="Arial" font-size="10" fill="#003366" font-weight="bold">Flux email automatiques (Gmail SMTP) :</text>
+  <text x="1010" y="2314" font-family="Arial" font-size="10" fill="#333">RDV soumis → directeur  |  Demande → admin  |  Approbation → directeur  |  Rejet → directeur</text>
+  <text x="1010" y="2330" font-family="Arial" font-size="10" fill="#333">RDV confirmé → patient (Mes RDV)  |  RDV annulé → patient (Mes RDV)</text>
+</svg>
